@@ -148,10 +148,17 @@ En configurar tots els proveïdors com a endpoints custom:
 - ⚠️ **Limitació**: Es perden algunes optimitzacions natives de LibreChat per a Anthropic i OpenAI (com format de missatges específic), però la funcionalitat bàsica funciona correctament
 
 **Estratègia de fitxers de configuració**:
-- `librechat.yaml` - Configuració base (versionada al git)
+- `librechat.yaml` - Configuració base sense Turnstile (versionada al git)
+- `librechat.yaml.local` - Configuració base amb Turnstile (NO versionada, per al servidor)
 - `librechat.yaml.basic` - Accés limitat (només Qwen Plus)
 - `librechat.yaml.standard` - Accés estàndard (Qwen bàsic + DeepSeek + Ollama)
 - `librechat.yaml.admin` - Accés complet (tots els proveïdors i models)
+
+Per activar Turnstile al servidor:
+```bash
+cp librechat.yaml librechat.yaml.local
+nano librechat.yaml.local  # Afegeix la secció turnstile amb la teva clau
+```
 
 Per canviar entre configuracions:
 ```bash
