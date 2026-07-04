@@ -13,6 +13,9 @@ CONTEXT.md
 
 # LibreChat config (contains secrets)
 librechat.yaml
+librechat.yaml.admin
+librechat.yaml.standard
+librechat.yaml.basic
 
 # Docker volumes
 pgdata/
