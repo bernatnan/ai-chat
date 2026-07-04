@@ -39,9 +39,10 @@ interface:
   fileCitations: true
 
 # Cloudflare Turnstile
-# Configura la teva site key per activar protecció contra bots
+# IMPORTANT: Substitueix LA_TEVA_SITE_KEY per la teva site key real de Cloudflare Turnstile
+# Obtén-la a: https://dash.cloudflare.com/turnstile
 turnstile:
-  siteKey: '${TURNSTILE_SITE_KEY}'
+  siteKey: 'LA_TEVA_SITE_KEY'
   options:
     language: "ca"
     size: "normal"

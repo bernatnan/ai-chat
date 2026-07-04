@@ -39,8 +39,9 @@ interface:
   fileCitations: true
 
 # Cloudflare Turnstile
+# IMPORTANT: Substitueix LA_TEVA_SITE_KEY per la teva site key real de Cloudflare Turnstile
 turnstile:
-  siteKey: '${TURNSTILE_SITE_KEY}'
+  siteKey: 'LA_TEVA_SITE_KEY'
   options:
     language: "ca"
     size: "normal"
