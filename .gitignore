@@ -1,0 +1,35 @@
+# Data directories
+data-node/
+meili_data/
+uploads/
+logs/
+images/
+
+# Environment and secrets
+.env
+.env.local
+.env.production
+
+# LibreChat config (contains secrets)
+librechat.yaml
+
+# Docker volumes
+pgdata/
+ollama_data/
+searxng_data/
+valkey_data/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.bak

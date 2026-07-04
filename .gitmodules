@@ -1,0 +1,3 @@
+[submodule "librechat"]
+	path = librechat
+	url = https://github.com/bernatnan/LibreChat.git
