@@ -98,12 +98,72 @@ La cerca web utilitza 3 components:
 
 El model **qwen-image-2.0-pro** està integrat via MCP server. Els usuaris poden generar i editar imatges demanant-ho als agents.
 
+## Configuració de models
+
+### Models per defecte
+
+Els models per defecte de cada proveïdor es configuren al `librechat.yaml`:
+
+```yaml
+endpoints:
+  custom:
+    - name: 'Qwen'
+      models:
+        default:
+          - 'qwen-max'
+          - 'qwen-plus'
+          # ...
+        fetch: true  # Descarrega models disponibles de l'API
+```
+
+### Selecció de models a la UI
+
+- **`fetch: true`**: LibreChat descarrega la llista completa de models de l'API. Els usuaris poden seleccionar qualsevol model des de la interfície.
+- **`fetch: false`**: Només es mostren els models llistats a `models.default`.
+
+Actualment, **Qwen** i **Ollama** tenen `fetch: true`, la resta tenen `fetch: false`.
+
+### Canviar models per defecte
+
+Edita `librechat.yaml` i modifica la llista `models.default` del proveïdor que vulguis. Després reinicia:
+
+```bash
+docker compose restart api
+```
+
+## Cloudflare Turnstile
+
+El Cloudflare Turnstile està disponible com a protecció contra bots als formularis de login i registre.
+
+### Configuració
+
+Edita `librechat.yaml` i descomenta la secció Turnstile:
+
+```yaml
+turnstile:
+  siteKey: "LA_TEVA_SITE_KEY"
+  options:
+    language: "ca"
+    size: "normal"
+```
+
+### Limitació de seguretat
+
+**Important**: La implementació actual de LibreChat només valida el token de Turnstile **client-side**. No hi ha verificació server-side del token.
+
+**Implicacions**:
+- ✅ Bloqueja bots casuals i automatització bàsica
+- ❌ No protegeix contra atacs directes a l'API (un atacant pot enviar peticions sense passar pel widget)
+
+**Recomanació**: Per a ús personal amb `ALLOW_REGISTRATION=false`, el risc és mínim. La seguretat real està en el control d'usuaris (només l'admin pot crear comptes).
+
 ## Requisits
 
 - Docker i Docker Compose
-- NVIDIA GPU amb drivers + NVIDIA Container Toolkit (per Ollama)
+- NVIDIA GPU amb drivers + NVIDIA Container Toolkit (per Ollama amb GPU)
 - Mínim 8GB RAM (16GB recomanat)
 - 50GB espai en disc
+- **Nota**: Ollama també funciona amb CPU (sense GPU), però el rendiment és molt inferior
 
 ## Roadmap
 
