@@ -62,13 +62,41 @@ webSearch:
   jinaApiKey: '${JINA_API_KEY}'
 
 endpoints:
-  anthropic:
-    streamRate: 20
-
-  openAI:
-    streamRate: 20
-
   custom:
+    # Anthropic (Claude)
+    - name: 'Anthropic'
+      apiKey: '${ANTHROPIC_API_KEY}'
+      baseURL: 'https://api.anthropic.com/v1'
+      models:
+        default:
+          - 'claude-3-5-sonnet-20241022'
+          - 'claude-3-5-haiku-20241022'
+          - 'claude-3-opus-20240229'
+          - 'claude-3-sonnet-20240229'
+          - 'claude-3-haiku-20240307'
+        fetch: false
+      titleConvo: true
+      titleModel: 'claude-3-haiku-20240307'
+      modelDisplayLabel: 'Anthropic'
+
+    # OpenAI
+    - name: 'OpenAI'
+      apiKey: '${OPENAI_API_KEY}'
+      baseURL: 'https://api.openai.com/v1'
+      models:
+        default:
+          - 'gpt-4o'
+          - 'gpt-4o-mini'
+          - 'gpt-4-turbo'
+          - 'gpt-4'
+          - 'gpt-3.5-turbo'
+          - 'o1-preview'
+          - 'o1-mini'
+        fetch: false
+      titleConvo: true
+      titleModel: 'gpt-3.5-turbo'
+      modelDisplayLabel: 'OpenAI'
+
     # Qwen / DashScope (Alibaba Cloud)
     - name: 'Qwen'
       apiKey: '${QWEN_API_KEY}'
@@ -157,6 +185,8 @@ mcpServers:
 
 actions:
   allowedDomains:
+    - 'api.anthropic.com'
+    - 'api.openai.com'
     - 'dashscope-intl.aliyuncs.com'
     - 'dashscope.aliyuncs.com'
     - 'api.deepseek.com'

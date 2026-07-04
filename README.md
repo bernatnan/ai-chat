@@ -82,6 +82,7 @@ Veure [DEPLOY.md](DEPLOY.md) per a la guia completa de desplegament.
 | Proveïdor | Tipus | Models |
 |-----------|-------|--------|
 | **Anthropic** | Cloud (API key) | Claude Sonnet, Opus, Haiku |
+| **OpenAI** | Cloud (API key) | GPT-4o, GPT-4, GPT-3.5, o1 |
 | **Qwen** | Cloud (API key) | Qwen Max, Plus, Turbo, VL |
 | **DeepSeek** | Cloud (API key) | DeepSeek Chat, Reasoner |
 | **Zhipu AI** | Cloud (API key) | GLM-4 Plus, Air, Flash |
@@ -131,6 +132,30 @@ Actualment, **Qwen** i **Ollama** tenen `fetch: true`, la resta tenen `fetch: fa
 Edita `librechat.yaml` i modifica la llista `models.default` del proveïdor que vulguis. Després reinicia:
 
 ```bash
+docker compose restart api
+```
+
+### Per què tots els endpoints són custom?
+
+En aquest projecte, **tots els proveïdors d'IA (incloent Anthropic i OpenAI) estan configurats com a endpoints custom**, no com a endpoints nadius de LibreChat.
+
+**Motiu**: LibreChat té una limitació de disseny que impedeix controlar quins models veu cada grup d'usuaris quan s'utilitzen endpoints nadius. La variable `ENDPOINTS` del `.env` controla globalment quins endpoints nadius es carreguen, però no permet restringir-los per rol o grup.
+
+En configurar tots els proveïdors com a endpoints custom:
+- ✅ **Control granular**: Cada fitxer `librechat.yaml.X` defineix exactament quins models estan disponibles
+- ✅ **Flexibilitat per grups**: Diferents usuaris poden tenir accés a diferents models
+- ✅ **Consistència**: Tots els proveïdors es configuren de la mateixa manera
+- ⚠️ **Limitació**: Es perden algunes optimitzacions natives de LibreChat per a Anthropic i OpenAI (com format de missatges específic), però la funcionalitat bàsica funciona correctament
+
+**Estratègia de fitxers de configuració**:
+- `librechat.yaml.main` - Configuració mínima (només Ollama bàsic)
+- `librechat.yaml.basic` - Accés limitat (només Qwen Plus)
+- `librechat.yaml.standard` - Accés estàndard (Qwen bàsic + DeepSeek + Ollama)
+- `librechat.yaml.admin` - Accés complet (tots els proveïdors i models)
+
+Per canviar entre configuracions:
+```bash
+cp librechat.yaml.admin librechat.yaml
 docker compose restart api
 ```
 
