@@ -9,6 +9,7 @@ images/
 .env
 .env.local
 .env.production
+CONTEXT.md
 
 # LibreChat config (contains secrets)
 librechat.yaml
