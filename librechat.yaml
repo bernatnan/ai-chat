@@ -39,12 +39,14 @@ interface:
   fileCitations: true
 
 # Cloudflare Turnstile
-# IMPORTANT: Substitueix LA_TEVA_SITE_KEY per la teva site key real de Cloudflare Turnstile
-turnstile:
-  siteKey: 'LA_TEVA_SITE_KEY'
-  options:
-    language: "ca"
-    size: "normal"
+# NOTA: Aquesta configuració base no inclou Turnstile.
+# Per activar-lo, copia aquest fitxer a librechat.yaml.local i afegeix la secció turnstile:
+#
+# turnstile:
+#   siteKey: 'LA_TEVA_SITE_KEY'
+#   options:
+#     language: "ca"
+#     size: "normal"
 
 registration:
   socialLogins: []
