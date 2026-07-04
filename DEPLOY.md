@@ -104,30 +104,54 @@ turnstile:
     size: "normal"
 ```
 
-### 3. Apache2 Reverse Proxy
+### 3. Apache2 Reverse Proxy amb SSL
 
 ```bash
-# Instal·lar mòduls necessaris
-sudo a2enmod proxy proxy_http proxy_wstunnel rewrite headers
+# Instal·lar mòduls necessaris (inclou ssl i remoteip per Cloudflare)
+sudo a2enmod proxy proxy_http proxy_wstunnel rewrite headers ssl remoteip
 sudo systemctl restart apache2
 
 # Copiar configuració
 sudo cp docs/apache2.conf.example /etc/apache2/sites-available/ai-chat.conf
 sudo nano /etc/apache2/sites-available/ai-chat.conf
+# Edita ServerName i les rutes dels certificats SSL
 
 # Activar i recarregar
 sudo a2ensite ai-chat
 sudo systemctl reload apache2
 ```
 
-**Important:** Al `.env`, configura `TRUST_PROXY=1` i els dominis reals.
+**Important:** 
+- Al `.env`, configura `TRUST_PROXY=1` i els dominis amb `https://`
+- La configuració d'Apache ja inclou redirect HTTP → HTTPS i suport per Cloudflare proxy
 
-### 4. SSL amb Let's Encrypt (opcional)
+### 4. SSL amb Let's Encrypt
+
+Si encara no tens el certificat:
 
 ```bash
 sudo apt install certbot python3-certbot-apache
 sudo certbot --apache -d chat.exemple.com
 ```
+
+### 5. Configuració de Cloudflare
+
+Si uses Cloudflare com a proxy DNS (recomanat):
+
+1. **DNS**: Activa el proxy (icona taronja) pel teu domini
+2. **SSL/TLS**: Configura el mode a **"Full (Strict)"** per màxima seguretat
+3. **Page Rules**: Afegeix una regla "Always Use HTTPS"
+4. **Network**: Assegura't que "WebSockets" està activat
+
+**Flux de connexió amb Cloudflare:**
+```
+Client → Cloudflare (HTTPS) → Apache (HTTPS) → LibreChat (HTTP :3080)
+```
+
+La configuració d'Apache ja inclou:
+- Trust en les IPs de Cloudflare per detectar la IP real del client
+- Header `CF-Connecting-IP` per obtenir la IP original
+- Redirect automàtic HTTP → HTTPS
 
 ## Serveis inclosos
 
