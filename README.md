@@ -7,8 +7,10 @@ Plataforma de xat amb IA auto-allotjada, construïda sobre [LibreChat](https://g
 - **Multi-proveïdor d'IA**: Anthropic, Qwen, DeepSeek, Zhipu AI i models locals via Ollama
 - **Cerca web integrada**: SearXNG (local) + Tavily (scraper) + Jina (reranker)
 - **Generació d'imatges**: Qwen Image 2.0 Pro via MCP server
-- **Models locals**: Ollama amb suport GPU (NVIDIA)
+- **Models locals**: Ollama amb suport GPU (NVIDIA) o CPU
+- **Admin Panel**: Gestió d'usuaris, grups, rols i configuracions des del navegador
 - **Gestió d'usuaris**: Registre limitat a admin, rols i permisos granulars
+- **Protecció contra bots**: Cloudflare Turnstile (client-side)
 - **RAG**: Retrieval-Augmented Generation amb pgvector
 - **Cerca full-text**: Meilisearch per cercar en converses
 - **Privacitat**: Totes les dades es guarden localment
@@ -66,6 +68,7 @@ Veure [DEPLOY.md](DEPLOY.md) per a la guia completa de desplegament.
 | Servei | Port | Descripció | Local? |
 |--------|------|------------|:------:|
 | LibreChat | 3080 | Interfície web + API | ✅ |
+| Admin Panel | 3000 | Gestió d'usuaris, grups, rols | ✅ |
 | MongoDB | - | Base de dades de converses | ✅ |
 | Meilisearch | 7700 | Cerca full-text | ✅ |
 | PostgreSQL (pgvector) | - | Base de dades vectorial (RAG) | ✅ |
@@ -160,10 +163,10 @@ turnstile:
 ## Requisits
 
 - Docker i Docker Compose
-- NVIDIA GPU amb drivers + NVIDIA Container Toolkit (per Ollama amb GPU)
+- NVIDIA GPU amb drivers + NVIDIA Container Toolkit (opcional, per Ollama amb GPU)
 - Mínim 8GB RAM (16GB recomanat)
 - 50GB espai en disc
-- **Nota**: Ollama també funciona amb CPU (sense GPU), però el rendiment és molt inferior
+- **Nota**: Ollama funciona amb CPU (sense GPU), però el rendiment és inferior
 
 ## Roadmap
 

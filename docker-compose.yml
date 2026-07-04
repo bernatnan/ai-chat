@@ -103,6 +103,22 @@ services:
     volumes:
       - valkey_data:/data
 
+  admin-panel:
+    container_name: librechat-admin-panel
+    image: ghcr.io/clickhouse/librechat-admin-panel:latest
+    restart: always
+    ports:
+      - "${ADMIN_PANEL_PORT:-3000}:3000"
+    environment:
+      - SESSION_SECRET=${ADMIN_PANEL_SESSION_SECRET}
+      - VITE_API_BASE_URL=${DOMAIN_CLIENT}
+      - API_SERVER_URL=http://api:3080
+      - SESSION_COOKIE_SECURE=true
+    depends_on:
+      - api
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
 volumes:
   pgdata:
   ollama_data:

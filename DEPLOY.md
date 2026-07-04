@@ -138,7 +138,7 @@ sudo certbot --apache -d chat.exemple.com
 
 Si uses Cloudflare com a proxy DNS (recomanat):
 
-1. **DNS**: Activa el proxy (icona taronja) pel teu domini
+1. **DNS**: Activa el proxy (icona taronja) per `chat.example.com` i `admin.chat.example.com`
 2. **SSL/TLS**: Configura el mode a **"Full (Strict)"** per màxima seguretat
 3. **Page Rules**: Afegeix una regla "Always Use HTTPS"
 4. **Network**: Assegura't que "WebSockets" està activat
@@ -146,6 +146,7 @@ Si uses Cloudflare com a proxy DNS (recomanat):
 **Flux de connexió amb Cloudflare:**
 ```
 Client → Cloudflare (HTTPS) → Apache (HTTPS) → LibreChat (HTTP :3080)
+Client → Cloudflare (HTTPS) → Apache (HTTPS) → Admin Panel (HTTP :3000)
 ```
 
 La configuració d'Apache ja inclou:
@@ -153,11 +154,64 @@ La configuració d'Apache ja inclou:
 - Header `CF-Connecting-IP` per obtenir la IP original
 - Redirect automàtic HTTP → HTTPS
 
+### 6. Admin Panel
+
+L'Admin Panel permet gestionar usuaris, grups, rols i configuracions des del navegador.
+
+**Accés:**
+- URL: `https://admin.chat.example.com`
+- Login: Usa les credencials del primer usuari (és auto-admin)
+
+**Funcionalitats:**
+- Gestionar usuaris (crear, editar, eliminar)
+- Crear grups i assignar usuaris
+- Configurar rols i permisos personalitzats
+- Editar configuracions en viu (sense reiniciar)
+- Aplicar overrides per rol/grup
+- Gestionar MCP servers
+
+**Configuració necessària:**
+
+El `setup.sh` genera automàticament `ADMIN_PANEL_SESSION_SECRET` al `.env`. Si ja tens el `.env`, afegeix manualment:
+
+```bash
+# Genera amb: openssl rand -hex 32
+ADMIN_PANEL_SESSION_SECRET=xxxxx-64-caracters-hex
+```
+
+**DNS a Cloudflare:**
+- Afegeix un registre `admin` tipus `A` o `CNAME` apuntant al teu servidor
+- Activa el proxy (icona taronja)
+
+### 7. Cloudflare Turnstile (opcional)
+
+Protecció contra bots als formularis de login i registre.
+
+**Configuració:**
+
+1. Crea un widget a [Cloudflare Turnstile Dashboard](https://dash.cloudflare.com/turnstile)
+2. Copia la **Site Key** (clau pública)
+3. Edita el `.env`:
+
+```bash
+TURNSTILE_SITE_KEY=0x4AAAAAAAxxxxxxxxxx
+```
+
+4. Reinicia LibreChat:
+
+```bash
+docker compose restart api
+```
+
+**Limitació de seguretat:**
+La implementació actual de LibreChat només valida el token **client-side**. No hi ha verificació server-side del token. Això bloqueja bots casuals però no protegeix contra atacs directes a l'API. Per a ús personal amb `ALLOW_REGISTRATION=false`, el risc és mínim.
+
 ## Serveis inclosos
 
 | Servei | Port | Descripció |
 |--------|------|------------|
 | LibreChat | 3080 | Interfície web + API |
+| Admin Panel | 3000 | Gestió d'usuaris, grups, rols |
 | MongoDB | - | Base de dades de converses |
 | Meilisearch | 7700 | Cerca full-text |
 | PostgreSQL (pgvector) | - | Base de dades vectorial (RAG) |

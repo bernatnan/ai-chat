@@ -17,6 +17,7 @@ if [ ! -f .env ]; then
     CREDS_IV=$(openssl rand -hex 16)
     MEILI_KEY=$(openssl rand -hex 32)
     SEARXNG_SECRET=$(openssl rand -hex 32)
+    ADMIN_PANEL_SECRET=$(openssl rand -hex 32)
 
     # Replace placeholders
     sed -i "s/GENERATE_JWT_SECRET/$JWT_SECRET/" .env
@@ -25,6 +26,7 @@ if [ ! -f .env ]; then
     sed -i "s/GENERATE_CREDS_IV/$CREDS_IV/" .env
     sed -i "s/GENERATE_MEILI_KEY/$MEILI_KEY/" .env
     sed -i "s/GENERATE_SEARXNG_SECRET/$SEARXNG_SECRET/" .env
+    sed -i "s/GENERATE_ADMIN_PANEL_SECRET/$ADMIN_PANEL_SECRET/" .env
 
     echo "  -> Secrets generated!"
     echo ""
