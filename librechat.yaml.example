@@ -64,6 +64,9 @@ endpoints:
   anthropic:
     streamRate: 20
 
+  openAI:
+    streamRate: 20
+
   custom:
     # Qwen / DashScope (Alibaba Cloud)
     - name: 'Qwen'
