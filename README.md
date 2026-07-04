@@ -148,7 +148,7 @@ En configurar tots els proveïdors com a endpoints custom:
 - ⚠️ **Limitació**: Es perden algunes optimitzacions natives de LibreChat per a Anthropic i OpenAI (com format de missatges específic), però la funcionalitat bàsica funciona correctament
 
 **Estratègia de fitxers de configuració**:
-- `librechat.yaml.main` - Configuració mínima (només Ollama bàsic)
+- `librechat.yaml` - Configuració base (versionada al git)
 - `librechat.yaml.basic` - Accés limitat (només Qwen Plus)
 - `librechat.yaml.standard` - Accés estàndard (Qwen bàsic + DeepSeek + Ollama)
 - `librechat.yaml.admin` - Accés complet (tots els proveïdors i models)
