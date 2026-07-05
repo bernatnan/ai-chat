@@ -104,6 +104,7 @@ mcpServers:
       - '/app/mcp-servers/document-generator/index.js'
     env:
       DOCUMENTS_PATH: '/app/uploads/documents'
+      DOCUMENTS_BASE_URL: '${DOMAIN_CLIENT}'
     timeout: 120000
 
 actions:
