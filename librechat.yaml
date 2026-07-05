@@ -1,13 +1,13 @@
-# LlibreChat Configuration - Configuració Bàsica
-# Aquesta configuració només inclou models Ollama bàsics
-# Ideal per a proves inicials o entorns amb recursos limitats
+# LibreChat Configuration - Basic Setup
+# This configuration only includes basic Ollama models
+# Ideal for initial testing or resource-limited environments
 
 version: 1.3.13
 
 cache: true
 
 interface:
-  customWelcome: 'Benvingut a LibreChat!'
+  customWelcome: 'Welcome to LibreChat!'
   fileSearch: true
   privacyPolicy:
     externalUrl: ''
@@ -39,11 +39,11 @@ interface:
   fileCitations: true
 
 # Cloudflare Turnstile
-# NOTA: Aquesta configuració base no inclou Turnstile.
-# Per activar-lo, copia aquest fitxer a librechat.yaml.local i afegeix la secció turnstile:
+# NOTE: This base configuration does not include Turnstile.
+# To enable it, copy this file to librechat.yaml.local and add the turnstile section:
 #
 # turnstile:
-#   siteKey: 'LA_TEVA_SITE_KEY'
+#   siteKey: 'YOUR_SITE_KEY'
 #   options:
 #     language: "ca"
 #     size: "normal"
@@ -62,7 +62,7 @@ webSearch:
 
 endpoints:
   custom:
-    # Ollama (models locals - configuració bàsica)
+    # Ollama (local models - basic configuration)
     - name: 'Ollama'
       apiKey: 'ollama'
       baseURL: 'http://ollama:11434/v1/'

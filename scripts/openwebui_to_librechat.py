@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Script de conversió d'exportacions d'OpenWebUI a format LibreChat.
+Conversion script for OpenWebUI exports to LibreChat format.
 
-Converteix converses exportades des d'OpenWebUI (format JSON) a format compatible
-amb la importació de LibreChat.
+Converts conversations exported from OpenWebUI (JSON format) to LibreChat-compatible
+import format.
 
-Ús:
-    python3 openwebui_to_librechat.py <fitxer_openwebui.json> [fitxer_sortida.json]
+Usage:
+    python3 openwebui_to_librechat.py <openwebui_file.json> [output_file.json]
 """
 
 import json
@@ -18,7 +18,7 @@ from typing import Dict, Any, List, Optional
 
 
 class OpenWebUIToLibreChatConverter:
-    """Converteix exportacions d'OpenWebUI a format LibreChat."""
+    """Converts OpenWebUI exports to LibreChat format."""
 
     def __init__(self, input_file: str, output_file: Optional[str] = None):
         self.input_file = Path(input_file)
@@ -27,27 +27,27 @@ class OpenWebUIToLibreChatConverter:
         self.conversations = []
 
     def _generate_output_path(self) -> Path:
-        """Genera el nom del fitxer de sortida basat en el fitxer d'entrada."""
+        """Generates the output file name based on the input file."""
         stem = self.input_file.stem
         return self.input_file.parent / f"{stem}_librechat.json"
 
     def load_openwebui_export(self) -> bool:
-        """Carrega el fitxer d'exportació d'OpenWebUI."""
+        """Loads the OpenWebUI export file."""
         try:
             with open(self.input_file, 'r', encoding='utf-8') as f:
                 self.data = json.load(f)
             return True
         except json.JSONDecodeError as e:
-            print(f"❌ Error: El fitxer no és un JSON vàlid: {e}")
+            print(f"❌ Error: The file is not a valid JSON: {e}")
             return False
         except Exception as e:
-            print(f"❌ Error carregant el fitxer: {e}")
+            print(f"❌ Error loading the file: {e}")
             return False
 
     def analyze_structure(self) -> Dict[str, Any]:
-        """Analitza l'estructura del fitxer d'OpenWebUI."""
+        """Analyzes the OpenWebUI file structure."""
         if self.data is None:
-            return {"error": "No s'ha carregat cap dada"}
+            return {"error": "No data loaded"}
 
         info = {
             "type": type(self.data).__name__,
@@ -68,23 +68,23 @@ class OpenWebUIToLibreChatConverter:
         return info
 
     def detect_format(self) -> str:
-        """Detecta el format específic de l'exportació d'OpenWebUI."""
+        """Detects the specific OpenWebUI export format."""
         if self.data is None:
             return "unknown"
 
-        # OpenWebUI pot exportar en diversos formats
-        # Format 1: Array de converses
+        # OpenWebUI can export in various formats
+        # Format 1: Array of conversations
         if isinstance(self.data, list) and len(self.data) > 0:
             first = self.data[0]
             if isinstance(first, dict):
-                # Format amb 'chat' i 'messages'
+                # Format with 'chat' and 'messages'
                 if 'chat' in first and isinstance(first['chat'], dict):
                     return "openwebui_chat_format"
-                # Format amb 'messages' directament
+                # Format with 'messages' directly
                 if 'messages' in first:
                     return "openwebui_messages_format"
 
-        # Format 2: Objecte amb 'conversations' o 'chats'
+        # Format 2: Object with 'conversations' or 'chats'
         if isinstance(self.data, dict):
             if 'conversations' in self.data:
                 return "openwebui_conversations_dict"
@@ -94,12 +94,12 @@ class OpenWebUIToLibreChatConverter:
         return "unknown"
 
     def convert(self) -> List[Dict[str, Any]]:
-        """Converteix totes les converses d'OpenWebUI a format LibreChat."""
+        """Converts all OpenWebUI conversations to LibreChat format."""
         if self.data is None:
-            raise ValueError("No s'han carregat dades")
+            raise ValueError("No data loaded")
 
         format_type = self.detect_format()
-        print(f"📋 Format detectat: {format_type}")
+        print(f"📋 Detected format: {format_type}")
 
         if format_type == "openwebui_chat_format":
             return self._convert_chat_format()
@@ -110,10 +110,10 @@ class OpenWebUIToLibreChatConverter:
         elif format_type == "openwebui_chats_dict":
             return self._convert_chats_dict()
         else:
-            raise ValueError(f"Format no reconegut: {format_type}")
+            raise ValueError(f"Unrecognized format: {format_type}")
 
     def _convert_chat_format(self) -> List[Dict[str, Any]]:
-        """Converteix el format amb estructura 'chat'."""
+        """Converts the format with 'chat' structure."""
         librechat_conversations = []
 
         if self.data is None:
@@ -130,7 +130,7 @@ class OpenWebUIToLibreChatConverter:
         return librechat_conversations
 
     def _convert_messages_format(self) -> List[Dict[str, Any]]:
-        """Converteix el format amb 'messages' directament."""
+        """Converts the format with 'messages' directly."""
         librechat_conversations = []
 
         if self.data is None:
@@ -146,7 +146,7 @@ class OpenWebUIToLibreChatConverter:
         return librechat_conversations
 
     def _convert_conversations_dict(self) -> List[Dict[str, Any]]:
-        """Converteix el format amb diccionari de 'conversations'."""
+        """Converts the format with 'conversations' dictionary."""
         librechat_conversations = []
         if self.data is None:
             return librechat_conversations
@@ -161,7 +161,7 @@ class OpenWebUIToLibreChatConverter:
         return librechat_conversations
 
     def _convert_chats_dict(self) -> List[Dict[str, Any]]:
-        """Converteix el format amb diccionari de 'chats'."""
+        """Converts the format with 'chats' dictionary."""
         librechat_conversations = []
 
         if self.data is None:
@@ -177,16 +177,16 @@ class OpenWebUIToLibreChatConverter:
         return librechat_conversations
 
     def _create_librechat_conversation(self, source_data: Dict, metadata: Dict) -> Dict[str, Any]:
-        """Crea una conversa en format LibreChat a partir de les dades d'OpenWebUI."""
+        """Creates a LibreChat conversation from OpenWebUI data."""
 
-        # Extreure informació bàsica
+        # Extract basic information
         title = self._extract_title(source_data, metadata)
         model = self._extract_model(source_data, metadata)
 
-        # Extreure i convertir missatges
+        # Extract and convert messages
         messages = self._extract_and_convert_messages(source_data)
 
-        # Crear estructura LibreChat
+        # Create LibreChat structure
         conversation_id = str(uuid.uuid4())
 
         librechat_conv = {
@@ -216,28 +216,28 @@ class OpenWebUIToLibreChatConverter:
         return librechat_conv
 
     def _extract_title(self, source_data: Dict, metadata: Dict) -> str:
-        """Extreu el títol de la conversa."""
-        # Provar diverses ubicacions possibles
+        """Extracts the conversation title."""
+        # Try various possible locations
         for key in ['title', 'name', 'subject']:
             if key in source_data and source_data[key]:
                 return str(source_data[key])
             if key in metadata and metadata[key]:
                 return str(metadata[key])
 
-        return "Conversa importada d'OpenWebUI"
+        return "Conversation imported from OpenWebUI"
 
     def _extract_model(self, source_data: Dict, metadata: Dict) -> str:
-        """Extreu el model utilitzat."""
+        """Extracts the model used."""
         for key in ['model', 'model_name', 'model_id']:
             if key in source_data and source_data[key]:
                 return str(source_data[key])
             if key in metadata and metadata[key]:
                 return str(metadata[key])
 
-        return "gpt-3.5-turbo"  # Model per defecte
+        return "gpt-3.5-turbo"  # Default model
 
     def _extract_timestamp(self, source_data: Dict, metadata: Dict) -> datetime:
-        """Extreu la marca de temps de creació."""
+        """Extracts the creation timestamp."""
         for key in ['created_at', 'createdAt', 'timestamp', 'date']:
             if key in source_data:
                 return self._parse_timestamp(source_data[key])
@@ -247,12 +247,12 @@ class OpenWebUIToLibreChatConverter:
         return datetime.now(timezone.utc)
 
     def _parse_timestamp(self, value: Any) -> datetime:
-        """Converteix diversos formats de timestamp a datetime."""
+        """Converts various timestamp formats to datetime."""
         if isinstance(value, (int, float)):
             # Unix timestamp
             return datetime.fromtimestamp(value, tz=timezone.utc)
         elif isinstance(value, str):
-            # ISO format o altres formats de cadena
+            # ISO format or other string formats
             try:
                 return datetime.fromisoformat(value.replace('Z', '+00:00'))
             except:
@@ -263,23 +263,23 @@ class OpenWebUIToLibreChatConverter:
         return datetime.now(timezone.utc)
 
     def _extract_and_convert_messages(self, source_data: Dict) -> List[Dict[str, Any]]:
-        """Extreu i converteix els missatges d'OpenWebUI a format LibreChat."""
+        """Extracts and converts OpenWebUI messages to LibreChat format."""
         messages = []
 
-        # Obtenir els missatges d'OpenWebUI
+        # Get OpenWebUI messages
         openwebui_messages = []
 
-        # Format 1: Missatges dins de 'chat'
+        # Format 1: Messages inside 'chat'
         if 'chat' in source_data and isinstance(source_data['chat'], dict):
             chat = source_data['chat']
             if 'messages' in chat:
                 openwebui_messages = chat['messages']
 
-        # Format 2: Missatges directament
+        # Format 2: Messages directly
         elif 'messages' in source_data:
             openwebui_messages = source_data['messages']
 
-        # Convertir cada missatge
+        # Convert each message
         parent_id = "00000000-0000-0000-0000-000000000000"
 
         for msg in openwebui_messages:
@@ -293,16 +293,16 @@ class OpenWebUIToLibreChatConverter:
         return messages
 
     def _convert_message(self, openwebui_msg: Dict, parent_id: str) -> Dict[str, Any]:
-        """Converteix un missatge d'OpenWebUI a format LibreChat."""
+        """Converts an OpenWebUI message to LibreChat format."""
 
-        # Determinar el rol (usuari o assistent)
+        # Determine the role (user or assistant)
         role = openwebui_msg.get('role', 'user')
         is_user = role in ['user', 'human']
 
-        # Extreure el contingut del missatge
+        # Extract message content
         content = self._extract_message_content(openwebui_msg)
 
-        # Extreure altra informació
+        # Extract other information
         message_id = openwebui_msg.get('id', str(uuid.uuid4()))
         if not isinstance(message_id, str):
             message_id = str(message_id)
@@ -310,7 +310,7 @@ class OpenWebUIToLibreChatConverter:
         timestamp = self._extract_timestamp(openwebui_msg, openwebui_msg)
         model = openwebui_msg.get('model', None)
 
-        # Crear missatge LibreChat
+        # Create LibreChat message
         librechat_msg = {
             "messageId": message_id,
             "conversationId": openwebui_msg.get('conversationId', str(uuid.uuid4())),
@@ -330,14 +330,14 @@ class OpenWebUIToLibreChatConverter:
         return librechat_msg
 
     def _extract_message_content(self, msg: Dict) -> str:
-        """Extreu el contingut del missatge d'OpenWebUI."""
-        # Format 1: Contingut en 'content'
+        """Extracts the message content from OpenWebUI."""
+        # Format 1: Content in 'content'
         if 'content' in msg:
             content = msg['content']
             if isinstance(content, str):
                 return content
             elif isinstance(content, list):
-                # Format multi-part (text, images, etc.)
+                # Multi-part format (text, images, etc.)
                 text_parts = []
                 for part in content:
                     if isinstance(part, dict) and 'text' in part:
@@ -346,43 +346,43 @@ class OpenWebUIToLibreChatConverter:
                         text_parts.append(part)
                 return '\n'.join(text_parts)
 
-        # Format 2: Contingut en 'text'
+        # Format 2: Content in 'text'
         if 'text' in msg:
             return str(msg['text'])
 
-        # Format 3: Contingut en 'message'
+        # Format 3: Content in 'message'
         if 'message' in msg:
             return str(msg['message'])
 
         return ""
 
     def _map_endpoint(self, model: Optional[str]) -> str:
-        """Mapa el model a l'endpoint de LibreChat corresponent."""
+        """Maps the model to the corresponding LibreChat endpoint."""
         if not model:
             return "openAI"
 
         model_lower = model.lower()
 
-        # Models d'Anthropic
+        # Anthropic models
         if 'claude' in model_lower:
             return "anthropic"
 
-        # Models de Google
+        # Google models
         if 'gemini' in model_lower or 'palm' in model_lower:
             return "google"
 
-        # Models d'OpenAI (per defecte)
+        # OpenAI models (default)
         if any(x in model_lower for x in ['gpt', 'o1', 'o3']):
             return "openAI"
 
-        # Altres models (Qwen, DeepSeek, etc.)
-        return "openAI"  # Es pot personalitzar segons els endpoints configurats
+        # Other models (Qwen, DeepSeek, etc.)
+        return "openAI"  # Can be customized based on configured endpoints
 
     def save_librechat_export(self) -> bool:
-        """Guarda les converses convertides en format LibreChat."""
+        """Saves the converted conversations in LibreChat format."""
         try:
-            # Si hi ha múltiples converses, guardar com a array
-            # Si només hi ha una, guardar com a objecte individual
+            # If there are multiple conversations, save as array
+            # If there's only one, save as individual object
             if len(self.conversations) == 1:
                 output_data = self.conversations[0]
             else:
@@ -393,55 +393,55 @@ class OpenWebUIToLibreChatConverter:
 
             return True
         except Exception as e:
-            print(f"❌ Error guardant el fitxer: {e}")
+            print(f"❌ Error saving the file: {e}")
             return False
 
     def convert_and_save(self) -> bool:
-        """Executa la conversió completa i guarda el resultat."""
-        print(f"📖 Carregant fitxer: {self.input_file}")
+        """Executes the complete conversion and saves the result."""
+        print(f"📖 Loading file: {self.input_file}")
 
         if not self.load_openwebui_export():
             return False
 
-        # Analitzar estructura
+        # Analyze structure
         structure = self.analyze_structure()
-        print(f"📊 Estructura: {structure}")
+        print(f"📊 Structure: {structure}")
 
-        # Convertir
-        print("🔄 Convertint converses...")
+        # Convert
+        print("🔄 Converting conversations...")
         try:
             self.conversations = self.convert()
-            print(f"✅ {len(self.conversations)} converses convertides")
+            print(f"✅ {len(self.conversations)} conversations converted")
         except Exception as e:
-            print(f"❌ Error en la conversió: {e}")
+            print(f"❌ Error during conversion: {e}")
             return False
 
-        # Guardar
-        print(f"💾 Guardant fitxer: {self.output_file}")
+        # Save
+        print(f"💾 Saving file: {self.output_file}")
         if not self.save_librechat_export():
             return False
 
-        print("✅ Conversió completada!")
-        print(f"📁 Fitxer de sortida: {self.output_file}")
-        print(f"📊 Converses convertides: {len(self.conversations)}")
+        print("✅ Conversion completed!")
+        print(f"📁 Output file: {self.output_file}")
+        print(f"📊 Conversations converted: {len(self.conversations)}")
 
         return True
 
 
 def main():
-    """Funció principal del script."""
+    """Main function of the script."""
     if len(sys.argv) < 2:
-        print("Ús: python3 openwebui_to_librechat.py <fitxer_openwebui.json> [fitxer_sortida.json]")
-        print("\nExemples:")
+        print("Usage: python3 openwebui_to_librechat.py <openwebui_file.json> [output_file.json]")
+        print("\nExamples:")
         print("  python3 openwebui_to_librechat.py openwebui_export.json")
-        print("  python3 openwebui_to_librechat.py openwebui_export.json sortida.json")
+        print("  python3 openwebui_to_librechat.py openwebui_export.json output.json")
         sys.exit(1)
 
     input_file = sys.argv[1]
     output_file = sys.argv[2] if len(sys.argv) > 2 else None
 
     if not Path(input_file).exists():
-        print(f"❌ Error: El fitxer '{input_file}' no existeix")
+        print(f"❌ Error: The file '{input_file}' does not exist")
         sys.exit(1)
 
     converter = OpenWebUIToLibreChatConverter(input_file, output_file)

@@ -1,22 +1,22 @@
 # AI Chat Stack
 
-Plataforma de xat amb IA auto-allotjada, construïda sobre [LibreChat](https://github.com/danny-avila/LibreChat) amb serveis addicionals per a cerca web, generació d'imatges i models locals.
+Self-hosted AI chat platform built on [LibreChat](https://github.com/danny-avila/LibreChat) with additional services for web search, image generation, and local models.
 
-## Característiques
+## Features
 
-- **Multi-proveïdor d'IA**: Anthropic, Qwen, DeepSeek, Zhipu AI i models locals via Ollama
-- **Cerca web integrada**: SearXNG (local) + Tavily (scraper) + Jina (reranker)
-- **Generació d'imatges**: Qwen Image 2.0 Pro via MCP server
-- **Models locals**: Ollama amb suport GPU (NVIDIA) o CPU
-- **Admin Panel**: Gestió d'usuaris, grups, rols i configuracions des del navegador
-- **Gestió d'usuaris**: Registre limitat a admin, rols i permisos granulars
-- **Protecció contra bots**: Cloudflare Turnstile (client-side)
-- **RAG**: Retrieval-Augmented Generation amb pgvector
-- **Cerca full-text**: Meilisearch per cercar en converses
-- **Privacitat**: Totes les dades es guarden localment
-- **Migració de converses**: Scripts per convertir converses des d'OpenWebUI i altres plataformes
+- **Multi-provider AI**: Anthropic, Qwen, DeepSeek, Zhipu AI, and local models via Ollama
+- **Integrated web search**: SearXNG (local) + Tavily (scraper) + Jina (reranker)
+- **Image generation**: Qwen Image 2.0 Pro via MCP server
+- **Local models**: Ollama with GPU (NVIDIA) or CPU support
+- **Admin Panel**: User, group, role, and configuration management from the browser
+- **User management**: Admin-only registration, roles, and granular permissions
+- **Bot protection**: Cloudflare Turnstile (client-side)
+- **RAG**: Retrieval-Augmented Generation with pgvector
+- **Full-text search**: Meilisearch for conversation search
+- **Privacy**: All data stored locally
+- **Conversation migration**: Scripts to convert conversations from OpenWebUI and other platforms
 
-## Arquitectura
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -42,46 +42,46 @@ Plataforma de xat amb IA auto-allotjada, construïda sobre [LibreChat](https://g
 └──────┘  └──────────┘ └──────┘ └────────┘
 ```
 
-## Instal·lació ràpida
+## Quick Start
 
 ```bash
-# 1. Clonar el repositori
+# 1. Clone the repository
 git clone https://github.com/bernatnan/ai-chat.git
 cd ai-chat
 
-# 2. Executar el setup (genera secrets i crea .env)
+# 2. Run setup (generates secrets and creates .env)
 ./setup.sh
 
-# 3. Editar .env per configurar API keys i domini
+# 3. Edit .env to configure API keys and domain
 nano .env
 
-# 4. Crear el primer usuari admin
+# 4. Create the first admin user
 docker compose exec api npm run create-user
 
-# 5. Descarregar models d'Ollama (opcional)
+# 5. Download Ollama models (optional)
 docker exec -it ollama ollama pull llama3.2
 ```
 
-Veure [DEPLOY.md](DEPLOY.md) per a la guia completa de desplegament.
+See [DEPLOY.md](DEPLOY.md) for the complete deployment guide.
 
-## Serveis inclosos
+## Included Services
 
-| Servei | Port | Descripció | Local? |
-|--------|------|------------|:------:|
-| LibreChat | 3080 | Interfície web + API | ✅ |
-| Admin Panel | 3000 | Gestió d'usuaris, grups, rols | ✅ |
-| MongoDB | - | Base de dades de converses | ✅ |
-| Meilisearch | 7700 | Cerca full-text | ✅ |
-| PostgreSQL (pgvector) | - | Base de dades vectorial (RAG) | ✅ |
+| Service | Port | Description | Local? |
+|---------|------|-------------|:------:|
+| LibreChat | 3080 | Web interface + API | ✅ |
+| Admin Panel | 3000 | User, group, role management | ✅ |
+| MongoDB | - | Conversation database | ✅ |
+| Meilisearch | 7700 | Full-text search | ✅ |
+| PostgreSQL (pgvector) | - | Vector database (RAG) | ✅ |
 | RAG API | 8000 | Retrieval-Augmented Generation | ✅ |
-| Ollama | 11434 | Models d'IA locals | ✅ |
-| SearXNG | 8080 | Motor de cerca web | ✅ |
-| Valkey | - | Cache per SearXNG | ✅ |
+| Ollama | 11434 | Local AI models | ✅ |
+| SearXNG | 8080 | Web search engine | ✅ |
+| Valkey | - | Cache for SearXNG | ✅ |
 
-## Proveïdors d'IA
+## AI Providers
 
-| Proveïdor | Tipus | Models |
-|-----------|-------|--------|
+| Provider | Type | Models |
+|----------|------|--------|
 | **Anthropic** | Cloud (API key) | Claude Sonnet, Opus, Haiku |
 | **OpenAI** | Cloud (API key) | GPT-4o, GPT-4, GPT-3.5, o1 |
 | **Qwen** | Cloud (API key) | Qwen Max, Plus, Turbo, VL |
@@ -89,25 +89,25 @@ Veure [DEPLOY.md](DEPLOY.md) per a la guia completa de desplegament.
 | **Zhipu AI** | Cloud (API key) | GLM-4 Plus, Air, Flash |
 | **Ollama** | Local | Llama, Mistral, Qwen, DeepSeek-R1 |
 
-## Cerca web
+## Web Search
 
-La cerca web utilitza 3 components:
+Web search uses 3 components:
 
-| Component | Servei | Descripció | Local? |
-|-----------|--------|------------|:------:|
-| **Search** | SearXNG | Meta-cercador (Google, DuckDuckGo, etc.) | ✅ |
-| **Scraper** | Tavily | Extreu contingut de pàgines web | ❌ (API) |
-| **Reranker** | Jina | Reordena resultats per rellevància | ❌ (API) |
+| Component | Service | Description | Local? |
+|-----------|---------|-------------|:------:|
+| **Search** | SearXNG | Meta-search engine (Google, DuckDuckGo, etc.) | ✅ |
+| **Scraper** | Tavily | Extracts content from web pages | ❌ (API) |
+| **Reranker** | Jina | Reranks results by relevance | ❌ (API) |
 
-## Generació d'imatges
+## Image Generation
 
-El model **qwen-image-2.0-pro** està integrat via MCP server. Els usuaris poden generar i editar imatges demanant-ho als agents.
+The **qwen-image-2.0-pro** model is integrated via MCP server. Users can generate and edit images by requesting it from agents.
 
-## Configuració de models
+## Model Configuration
 
-### Models per defecte
+### Default Models
 
-Els models per defecte de cada proveïdor es configuren al `librechat.yaml`:
+Default models for each provider are configured in `librechat.yaml`:
 
 ```yaml
 endpoints:
@@ -118,50 +118,50 @@ endpoints:
           - 'qwen-max'
           - 'qwen-plus'
           # ...
-        fetch: true  # Descarrega models disponibles de l'API
+        fetch: true  # Fetches available models from API
 ```
 
-### Selecció de models a la UI
+### Model Selection in UI
 
-- **`fetch: true`**: LibreChat descarrega la llista completa de models de l'API. Els usuaris poden seleccionar qualsevol model des de la interfície.
-- **`fetch: false`**: Només es mostren els models llistats a `models.default`.
+- **`fetch: true`**: LibreChat downloads the complete model list from the API. Users can select any model from the interface.
+- **`fetch: false`**: Only models listed in `models.default` are shown.
 
-Actualment, **Qwen** i **Ollama** tenen `fetch: true`, la resta tenen `fetch: false`.
+Currently, **Qwen** and **Ollama** have `fetch: true`, the rest have `fetch: false`.
 
-### Canviar models per defecte
+### Changing Default Models
 
-Edita `librechat.yaml` i modifica la llista `models.default` del proveïdor que vulguis. Després reinicia:
+Edit `librechat.yaml` and modify the `models.default` list for the provider you want. Then restart:
 
 ```bash
 docker compose restart api
 ```
 
-### Per què tots els endpoints són custom?
+### Why All Endpoints Are Custom?
 
-En aquest projecte, **tots els proveïdors d'IA (incloent Anthropic i OpenAI) estan configurats com a endpoints custom**, no com a endpoints nadius de LibreChat.
+In this project, **all AI providers (including Anthropic and OpenAI) are configured as custom endpoints**, not as LibreChat native endpoints.
 
-**Motiu**: LibreChat té una limitació de disseny que impedeix controlar quins models veu cada grup d'usuaris quan s'utilitzen endpoints nadius. La variable `ENDPOINTS` del `.env` controla globalment quins endpoints nadius es carreguen, però no permet restringir-los per rol o grup.
+**Reason**: LibreChat has a design limitation that prevents controlling which models each user group sees when using native endpoints. The `ENDPOINTS` variable in `.env` globally controls which native endpoints are loaded, but doesn't allow restricting them by role or group.
 
-En configurar tots els proveïdors com a endpoints custom:
-- ✅ **Control granular**: Cada fitxer `librechat.yaml.X` defineix exactament quins models estan disponibles
-- ✅ **Flexibilitat per grups**: Diferents usuaris poden tenir accés a diferents models
-- ✅ **Consistència**: Tots els proveïdors es configuren de la mateixa manera
-- ⚠️ **Limitació**: Es perden algunes optimitzacions natives de LibreChat per a Anthropic i OpenAI (com format de missatges específic), però la funcionalitat bàsica funciona correctament
+By configuring all providers as custom endpoints:
+- ✅ **Granular control**: Each `librechat.yaml.X` file defines exactly which models are available
+- ✅ **Group flexibility**: Different users can have access to different models
+- ✅ **Consistency**: All providers are configured the same way
+- ⚠️ **Limitation**: Some native LibreChat optimizations for Anthropic and OpenAI are lost (like specific message formatting), but basic functionality works correctly
 
-**Estratègia de fitxers de configuració**:
-- `librechat.yaml` - Configuració base sense Turnstile (versionada al git)
-- `librechat.yaml.local` - Configuració base amb Turnstile (NO versionada, per al servidor)
-- `librechat.yaml.basic` - Accés limitat (només Qwen Plus)
-- `librechat.yaml.standard` - Accés estàndard (Qwen bàsic + DeepSeek + Ollama)
-- `librechat.yaml.admin` - Accés complet (tots els proveïdors i models)
+**Configuration file strategy**:
+- `librechat.yaml` - Base configuration without Turnstile (versioned in git)
+- `librechat.yaml.local` - Base configuration with Turnstile (NOT versioned, for server)
+- `librechat.yaml.basic` - Limited access (only Qwen Plus)
+- `librechat.yaml.standard` - Standard access (Qwen basic + DeepSeek + Ollama)
+- `librechat.yaml.admin` - Full access (all providers and models)
 
-Per activar Turnstile al servidor:
+To activate Turnstile on the server:
 ```bash
 cp librechat.yaml librechat.yaml.local
-nano librechat.yaml.local  # Afegeix la secció turnstile amb la teva clau
+nano librechat.yaml.local  # Add turnstile section with your key
 ```
 
-Per canviar entre configuracions:
+To switch between configurations:
 ```bash
 cp librechat.yaml.admin librechat.yaml
 docker compose restart api
@@ -169,179 +169,179 @@ docker compose restart api
 
 ## Cloudflare Turnstile
 
-El Cloudflare Turnstile està disponible com a protecció contra bots als formularis de login i registre.
+Cloudflare Turnstile is available as bot protection for login and registration forms.
 
-### Configuració
+### Configuration
 
-Edita `librechat.yaml` i descomenta la secció Turnstile:
+Edit `librechat.yaml` and uncomment the Turnstile section:
 
 ```yaml
 turnstile:
-  siteKey: "LA_TEVA_SITE_KEY"
+  siteKey: "YOUR_SITE_KEY"
   options:
     language: "ca"
     size: "normal"
 ```
 
-### Limitació de seguretat
+### Security Limitation
 
-**Important**: La implementació actual de LibreChat només valida el token de Turnstile **client-side**. No hi ha verificació server-side del token.
+**Important**: The current LibreChat implementation only validates the Turnstile token **client-side**. There is no server-side token verification.
 
-**Implicacions**:
-- ✅ Bloqueja bots casuals i automatització bàsica
-- ❌ No protegeix contra atacs directes a l'API (un atacant pot enviar peticions sense passar pel widget)
+**Implications**:
+- ✅ Blocks casual bots and basic automation
+- ❌ Does not protect against direct API attacks (an attacker can send requests without going through the widget)
 
-**Recomanació**: Per a ús personal amb `ALLOW_REGISTRATION=false`, el risc és mínim. La seguretat real està en el control d'usuaris (només l'admin pot crear comptes).
+**Recommendation**: For personal use with `ALLOW_REGISTRATION=false`, the risk is minimal. The real security is in user control (only admin can create accounts).
 
-## Requisits
+## Requirements
 
-- Docker i Docker Compose
-- NVIDIA GPU amb drivers + NVIDIA Container Toolkit (opcional, per Ollama amb GPU)
-- Mínim 8GB RAM (16GB recomanat)
-- 50GB espai en disc
-- **Nota**: Ollama funciona amb CPU (sense GPU), però el rendiment és inferior
+- Docker and Docker Compose
+- NVIDIA GPU with drivers + NVIDIA Container Toolkit (optional, for Ollama with GPU)
+- Minimum 8GB RAM (16GB recommended)
+- 50GB disk space
+- **Note**: Ollama works with CPU (without GPU), but performance is lower
 
 ## Roadmap
 
-### Fase 1: Setup inicial (actual) ✅
+### Phase 1: Initial Setup (current) ✅
 
-- [x] LibreChat amb multi-proveïdor (Anthropic, Qwen, DeepSeek, Zhipu AI)
-- [x] Ollama per models locals
-- [x] SearXNG per cerca web local
-- [x] Tavily com a scraper (API)
-- [x] Jina com a reranker (API)
+- [x] LibreChat with multi-provider (Anthropic, Qwen, DeepSeek, Zhipu AI)
+- [x] Ollama for local models
+- [x] SearXNG for local web search
+- [x] Tavily as scraper (API)
+- [x] Jina as reranker (API)
 - [x] Qwen Image via MCP server
-- [x] Registre limitat a admin
-- [x] Cloudflare Turnstile (opcional)
+- [x] Admin-only registration
+- [x] Cloudflare Turnstile (optional)
 
-### Fase 2: Substituir APIs per serveis locals
+### Phase 2: Replace APIs with Local Services
 
-- [ ] **Scraper local**: Substituir Tavily per Firecrawl self-hosted
-  - Requereix ~12GB RAM addicional
-  - 5 contenidors nous (API, Playwright, Redis, RabbitMQ, PostgreSQL)
-  - 100% local i privatiu
+- [ ] **Local scraper**: Replace Tavily with Firecrawl self-hosted
+  - Requires ~12GB additional RAM
+  - 5 new containers (API, Playwright, Redis, RabbitMQ, PostgreSQL)
+  - 100% local and private
   
-- [ ] **Reranker local**: Substituir Jina per model local
+- [ ] **Local reranker**: Replace Jina with local model
   - Model: `jinaai/jina-reranker-v3` (~600MB)
-  - Servidor: HuggingFace TEI o similar
-  - Requereix adapter/proxy per compatibilitat amb LibreChat
-  - Funciona amb CPU (no necessita GPU)
+  - Server: HuggingFace TEI or similar
+  - Requires adapter/proxy for LibreChat compatibility
+  - Works with CPU (doesn't need GPU)
 
-### Fase 3: Optimització i escalabilitat
+### Phase 3: Optimization and Scalability
 
-- [ ] **Redis per caching**: Afegir Redis per millorar rendiment
-- [ ] **Backup automàtic**: Script de backup programat de MongoDB i uploads
-- [ ] **Monitorització**: Integrar Prometheus + Grafana
-- [ ] **Logs centralitzats**: ELK stack o similar
-- [ ] **Multi-tenant**: Configurar grups i permisos avançats
+- [ ] **Redis for caching**: Add Redis to improve performance
+- [ ] **Automatic backup**: Scheduled backup script for MongoDB and uploads
+- [ ] **Monitoring**: Integrate Prometheus + Grafana
+- [ ] **Centralized logs**: ELK stack or similar
+- [ ] **Multi-tenant**: Configure advanced groups and permissions
 
-### Fase 4: Funcionalitats avançades
+### Phase 4: Advanced Features
 
-- [ ] **Voice**: Speech-to-text i text-to-speech locals (Whisper, Piper)
-- [ ] **Code Interpreter**: Execució de codi en sandbox
-- [ ] **Agents avançats**: MCP servers addicionals, subagents
-- [ ] **Fine-tuning**: Entrenar models locals amb dades pròpies
-- [ ] **Federació**: Connectar amb altres instàncies (futur)
+- [ ] **Voice**: Local speech-to-text and text-to-speech (Whisper, Piper)
+- [ ] **Code Interpreter**: Code execution in sandbox
+- [ ] **Advanced agents**: Additional MCP servers, subagents
+- [ ] **Fine-tuning**: Train local models with custom data
+- [ ] **Federation**: Connect with other instances (future)
 
-## Estructura del projecte
+## Project Structure
 
 ```
 ai-chat/
-├── docker-compose.yml          # Orquestra tots els serveis
-├── .env.template               # Plantilla de configuració
-├── librechat.yaml              # Configuració de LibreChat
-├── setup.sh                    # Script d'instal·lació
-├── DEPLOY.md                   # Guia de desplegament
-├── README.md                   # Aquest fitxer
+├── docker-compose.yml          # Orchestrates all services
+├── .env.template               # Configuration template
+├── librechat.yaml              # LibreChat configuration
+├── setup.sh                    # Installation script
+├── DEPLOY.md                   # Deployment guide
+├── README.md                   # This file
 ├── searxng/
-│   └── settings.yml            # Configuració de SearXNG
+│   └── settings.yml            # SearXNG configuration
 ├── docs/
-│   └── apache2.conf.example    # Configuració Apache2
-└── librechat/                  # Git submodule → fork de LibreChat
-    ├── Dockerfile.custom       # Imatge amb MCP server
+│   └── apache2.conf.example    # Apache2 configuration
+└── librechat/                  # Git submodule → LibreChat fork
+    ├── Dockerfile.custom       # Image with MCP server
     ├── mcp-servers/
-    │   └── qwen-image/         # MCP server per Qwen Image
+    │   └── qwen-image/         # MCP server for Qwen Image
     └── ...
 ```
 
-## Gestió d'usuaris
+## User Management
 
-Amb `ALLOW_REGISTRATION=false`, només l'admin pot crear usuaris:
+With `ALLOW_REGISTRATION=false`, only admin can create users:
 
 ```bash
-# Crear usuari
+# Create user
 docker compose exec api npm run create-user
 
-# Convidar per email
-docker compose exec api npm run invite-user usuari@exemple.com
+# Invite by email
+docker compose exec api npm run invite-user user@example.com
 
-# Llistar usuaris
+# List users
 docker compose exec api npm run list-users
 ```
 
-## Migració de converses
+## Conversation Migration
 
-El projecte inclou scripts per convertir converses des d'altres plataformes (com OpenWebUI) a format compatible amb LibreChat.
+The project includes scripts to convert conversations from other platforms (like OpenWebUI) to LibreChat-compatible format.
 
-### Scripts disponibles
+### Available Scripts
 
-**Diagnòstic de format:**
+**Format diagnostics:**
 ```bash
-# Analitza un fitxer JSON per identificar el format
-python3 scripts/diagnose_import.py conversa.json
+# Analyzes a JSON file to identify the format
+python3 scripts/diagnose_import.py conversation.json
 ```
 
-**Conversió OpenWebUI → LibreChat:**
+**OpenWebUI → LibreChat conversion:**
 ```bash
-# Converteix exportacions d'OpenWebUI a format LibreChat
+# Converts OpenWebUI exports to LibreChat format
 python3 scripts/openwebui_to_librechat.py openwebui_export.json
 ```
 
-### Com importar converses
+### How to Import Conversations
 
-1. **Exporta** les converses des d'OpenWebUI (format JSON)
-2. **Converteix** el fitxer amb el script:
+1. **Export** conversations from OpenWebUI (JSON format)
+2. **Convert** the file with the script:
    ```bash
    python3 scripts/openwebui_to_librechat.py openwebui_export.json
    ```
-3. **Importa** a LibreChat:
-   - Ves a Settings → Data Controls → Import Conversations
-   - Selecciona el fitxer `_librechat.json` generat
+3. **Import** to LibreChat:
+   - Go to Settings → Data Controls → Import Conversations
+   - Select the generated `_librechat.json` file
 
-### Formats suportats
+### Supported Formats
 
-**Nadius (sense conversió):**
-- LibreChat (natiu)
+**Native (no conversion needed):**
+- LibreChat (native)
 - ChatGPT (OpenAI)
 - ChatbotUI
 - Claude (Anthropic)
 
-**Requereixen conversió:**
-- OpenWebUI → Utilitza `openwebui_to_librechat.py`
+**Require conversion:**
+- OpenWebUI → Use `openwebui_to_librechat.py`
 
-Veure [scripts/README.md](scripts/README.md) per a més detalls.
+See [scripts/README.md](scripts/README.md) for more details.
 
-## Actualitzacions
+## Updates
 
 ```bash
-# Actualitzar el projecte i submodules
+# Update project and submodules
 git pull
 git submodule update --remote --merge
 docker compose pull
 docker compose up -d --build
 ```
 
-## Contribucions
+## Contributions
 
-Aquest és un projecte personal. Si trobes errors o tens suggeriments, obre un issue.
+This is a personal project. If you find bugs or have suggestions, open an issue.
 
-## Llicència
+## License
 
 - **AI Chat Stack**: MIT
-- **LibreChat**: MIT (veure [librechat/LICENSE](librechat/LICENSE))
+- **LibreChat**: MIT (see [librechat/LICENSE](librechat/LICENSE))
 - **SearXNG**: AGPL-3.0
 
-## Enllaços útils
+## Useful Links
 
 - [LibreChat Docs](https://librechat.ai/docs)
 - [SearXNG Docs](https://docs.searxng.org/)

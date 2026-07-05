@@ -8,11 +8,11 @@
 # Then: sudo a2ensite ai-chat && sudo systemctl reload apache2
 #
 # Cloudflare Configuration:
-#   - DNS amb proxy activat (taronja) per chat.example.com i admin.chat.example.com
-#   - SSL/TLS mode: "Full (Strict)" recomanat
-#   - A Page Rules, afegir "Always Use HTTPS"
+#   - DNS with proxy enabled (orange cloud) for chat.example.com and admin.chat.example.com
+#   - SSL/TLS mode: "Full (Strict)" recommended
+#   - In Page Rules, add "Always Use HTTPS"
 
-# HTTP - Redirect to HTTPS (aplica a tots els subdominis)
+# HTTP - Redirect to HTTPS (applies to all subdomains)
 <VirtualHost *:80>
     ServerName chat.example.com
     ServerAlias admin.chat.example.com

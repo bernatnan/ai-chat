@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Script de diagnòstic per identificar el format de fitxers JSON d'importació de converses.
-Analitza l'estructura del fitxer i determina quin format té segons els formats suportats per LibreChat.
+Diagnostic script to identify the format of conversation import JSON files.
+Analyzes the file structure and determines which format it has according to LibreChat supported formats.
 """
 
 import json
@@ -11,7 +11,7 @@ from typing import Dict, Any
 
 
 class ConversationFormatAnalyzer:
-    """Analitza fitxers JSON per identificar el format de conversa."""
+    """Analyzes JSON files to identify the conversation format."""
 
     def __init__(self, file_path: str):
         self.file_path = Path(file_path)
@@ -19,22 +19,22 @@ class ConversationFormatAnalyzer:
         self.format_info = {}
 
     def load_file(self) -> bool:
-        """Carrega el fitxer JSON."""
+        """Loads the JSON file."""
         try:
             with open(self.file_path, 'r', encoding='utf-8') as f:
                 self.data = json.load(f)
             return True
         except json.JSONDecodeError as e:
-            print(f"❌ Error: El fitxer no és un JSON vàlid: {e}")
+            print(f"❌ Error: The file is not a valid JSON: {e}")
             return False
         except Exception as e:
-            print(f"❌ Error carregant el fitxer: {e}")
+            print(f"❌ Error loading the file: {e}")
             return False
 
     def analyze(self) -> Dict[str, Any]:
-        """Analitza l'estructura del fitxer i determina el format."""
+        """Analyzes the file structure and determines the format."""
         if self.data is None:
-            return {"error": "No s'ha pogut carregar el fitxer"}
+            return {"error": "Could not load the file"}
 
         result = {
             "file_path": str(self.file_path),
@@ -50,50 +50,50 @@ class ConversationFormatAnalyzer:
             "recommendation": None
         }
 
-        # Detectar format LibreChat natiu
+        # Detect native LibreChat format
         if self._is_librechat_format():
-            result["detected_format"] = "LibreChat (natiu)"
-            result["confidence"] = "alta"
+            result["detected_format"] = "LibreChat (native)"
+            result["confidence"] = "high"
             result["supported_by_librechat"] = True
             result["details"] = self._analyze_librechat_format()
-            result["recommendation"] = "✅ Aquest format és compatible amb LibreChat"
+            result["recommendation"] = "✅ This format is compatible with LibreChat"
 
-        # Detectar format ChatGPT
+        # Detect ChatGPT format
         elif self._is_chatgpt_format():
             result["detected_format"] = "ChatGPT (OpenAI)"
-            result["confidence"] = "alta"
+            result["confidence"] = "high"
             result["supported_by_librechat"] = True
             result["details"] = self._analyze_chatgpt_format()
-            result["recommendation"] = "✅ Aquest format és compatible amb LibreChat"
+            result["recommendation"] = "✅ This format is compatible with LibreChat"
 
-        # Detectar format ChatbotUI
+        # Detect ChatbotUI format
         elif self._is_chatbotui_format():
             result["detected_format"] = "ChatbotUI"
-            result["confidence"] = "alta"
+            result["confidence"] = "high"
             result["supported_by_librechat"] = True
             result["details"] = self._analyze_chatbotui_format()
-            result["recommendation"] = "✅ Aquest format és compatible amb LibreChat"
+            result["recommendation"] = "✅ This format is compatible with LibreChat"
 
-        # Detectar format Claude
+        # Detect Claude format
         elif self._is_claude_format():
             result["detected_format"] = "Claude (Anthropic)"
-            result["confidence"] = "alta"
+            result["confidence"] = "high"
             result["supported_by_librechat"] = True
             result["details"] = self._analyze_claude_format()
-            result["recommendation"] = "✅ Aquest format és compatible amb LibreChat"
+            result["recommendation"] = "✅ This format is compatible with LibreChat"
 
-        # Format no reconegut
+        # Unrecognized format
         else:
-            result["detected_format"] = "Desconegut"
-            result["confidence"] = "baixa"
+            result["detected_format"] = "Unknown"
+            result["confidence"] = "low"
             result["supported_by_librechat"] = False
             result["details"] = self._analyze_unknown_format()
-            result["recommendation"] = "❌ Aquest format NO és compatible amb LibreChat. Cal convertir-lo."
+            result["recommendation"] = "❌ This format is NOT compatible with LibreChat. It needs to be converted."
 
         return result
 
     def _is_librechat_format(self) -> bool:
-        """Verifica si és el format natiu de LibreChat."""
+        """Checks if it's the native LibreChat format."""
         if not isinstance(self.data, dict):
             return False
 
@@ -103,19 +103,19 @@ class ConversationFormatAnalyzer:
         return has_conversation_id and has_messages
 
     def _is_chatgpt_format(self) -> bool:
-        """Verifica si és el format de ChatGPT (OpenAI)."""
+        """Checks if it's the ChatGPT (OpenAI) format."""
         if not isinstance(self.data, list):
             return False
 
         if len(self.data) == 0:
             return False
 
-        # El primer element ha de tenir 'mapping'
+        # The first element must have 'mapping'
         first_item = self.data[0]
         return isinstance(first_item, dict) and "mapping" in first_item
 
     def _is_chatbotui_format(self) -> bool:
-        """Verifica si és el format de ChatbotUI."""
+        """Checks if it's the ChatbotUI format."""
         if not isinstance(self.data, dict):
             return False
 
@@ -125,19 +125,19 @@ class ConversationFormatAnalyzer:
         return has_version and has_history
 
     def _is_claude_format(self) -> bool:
-        """Verifica si és el format de Claude (Anthropic)."""
+        """Checks if it's the Claude (Anthropic) format."""
         if not isinstance(self.data, list):
             return False
 
         if len(self.data) == 0:
             return False
 
-        # El primer element ha de tenir 'chat_messages'
+        # The first element must have 'chat_messages'
         first_item = self.data[0]
         return isinstance(first_item, dict) and "chat_messages" in first_item
 
     def _analyze_librechat_format(self) -> Dict[str, Any]:
-        """Analitza els detalls del format LibreChat."""
+        """Analyzes the details of the LibreChat format."""
         details = {
             "conversation_id": self.data.get("conversationId"),
             "title": self.data.get("title"),
@@ -158,7 +158,7 @@ class ConversationFormatAnalyzer:
         return details
 
     def _analyze_chatgpt_format(self) -> Dict[str, Any]:
-        """Analitza els detalls del format ChatGPT."""
+        """Analyzes the details of the ChatGPT format."""
         details = {
             "conversation_count": len(self.data),
             "first_conversation_title": self.data[0].get("title") if self.data else None
@@ -171,7 +171,7 @@ class ConversationFormatAnalyzer:
         return details
 
     def _analyze_chatbotui_format(self) -> Dict[str, Any]:
-        """Analitza els detalls del format ChatbotUI."""
+        """Analyzes the details of the ChatbotUI format."""
         details = {
             "version": self.data.get("version"),
             "conversation_count": len(self.data.get("history", [])),
@@ -182,7 +182,7 @@ class ConversationFormatAnalyzer:
         return details
 
     def _analyze_claude_format(self) -> Dict[str, Any]:
-        """Analitza els detalls del format Claude."""
+        """Analyzes the details of the Claude format."""
         details = {
             "conversation_count": len(self.data),
             "first_conversation_name": self.data[0].get("name") if self.data else None
@@ -194,21 +194,21 @@ class ConversationFormatAnalyzer:
         return details
 
     def _analyze_unknown_format(self) -> Dict[str, Any]:
-        """Analitza un format desconegut i proporciona informació útil."""
+        """Analyzes an unknown format and provides useful information."""
         details = {
-            "analysis": "Format no reconegut. Analitzant estructura..."
+            "analysis": "Format not recognized. Analyzing structure..."
         }
 
         if isinstance(self.data, dict):
             details["type"] = "object"
-            details["keys"] = list(self.data.keys())[:20]  # Primeres 20 claus
+            details["keys"] = list(self.data.keys())[:20]  # First 20 keys
             details["key_count"] = len(self.data.keys())
 
-            # Intentar identificar patrons
+            # Try to identify patterns
             if "messages" in self.data:
-                details["note"] = "Té 'messages' però falta 'conversationId'. Podria ser un format similar a LibreChat."
+                details["note"] = "Has 'messages' but missing 'conversationId'. Could be a LibreChat-like format."
             elif "conversations" in self.data:
-                details["note"] = "Té 'conversations'. Podria ser un format multi-conversa."
+                details["note"] = "Has 'conversations'. Could be a multi-conversation format."
 
         elif isinstance(self.data, list):
             details["type"] = "array"
@@ -220,14 +220,14 @@ class ConversationFormatAnalyzer:
                     details["first_item_keys"] = list(first_item.keys())[:20]
                     details["first_item_key_count"] = len(first_item.keys())
 
-                    # Intentar identificar patrons
+                    # Try to identify patterns
                     if "role" in first_item and "content" in first_item:
-                        details["note"] = "Sembla un format de missatges. Podria ser compatible amb LibreChat amb conversió."
+                        details["note"] = "Looks like a message format. Could be compatible with LibreChat with conversion."
 
         return details
 
     def _count_recursive_messages(self, messages_tree) -> int:
-        """Compta recursivament el nombre de missatges en una estructura arbòria."""
+        """Recursively counts the number of messages in a tree structure."""
         count = 0
         if isinstance(messages_tree, list):
             for msg in messages_tree:
@@ -238,49 +238,49 @@ class ConversationFormatAnalyzer:
         return count
 
     def print_report(self):
-        """Imprimeix un informe complet de l'anàlisi."""
+        """Prints a complete analysis report."""
         result = self.analyze()
 
         print("\n" + "="*80)
-        print("INFORME D'ANÀLISI DE FORMAT DE CONVERSA")
+        print("CONVERSATION FORMAT ANALYSIS REPORT")
         print("="*80)
 
-        print(f"\n📁 Fitxer: {result['file_path']}")
-        print(f"📏 Mida: {result['file_size']} bytes")
-        print(f"📊 Tipus: {'Array' if result['is_array'] else 'Objecte' if result['is_object'] else 'Desconegut'}")
+        print(f"\n📁 File: {result['file_path']}")
+        print(f"📏 Size: {result['file_size']} bytes")
+        print(f"📊 Type: {'Array' if result['is_array'] else 'Object' if result['is_object'] else 'Unknown'}")
 
         if result['is_array']:
             print(f"📝 Elements: {result['array_length']}")
         elif result['is_object'] and result['top_level_keys']:
-            print(f"🔑 Claus principals: {', '.join(result['top_level_keys'][:10])}")
+            print(f"🔑 Main keys: {', '.join(result['top_level_keys'][:10])}")
             if len(result['top_level_keys']) > 10:
-                print(f"   ... i {len(result['top_level_keys']) - 10} claus més")
+                print(f"   ... and {len(result['top_level_keys']) - 10} more keys")
 
         print("\n" + "-"*80)
-        print("DETECCIÓ DE FORMAT")
+        print("FORMAT DETECTION")
         print("-"*80)
 
-        print(f"\n🎯 Format detectat: {result['detected_format']}")
-        print(f"🎲 Confiança: {result['confidence']}")
-        print(f"✅ Compatible amb LibreChat: {'SÍ' if result['supported_by_librechat'] else 'NO'}")
+        print(f"\n🎯 Detected format: {result['detected_format']}")
+        print(f"🎲 Confidence: {result['confidence']}")
+        print(f"✅ Compatible with LibreChat: {'YES' if result['supported_by_librechat'] else 'NO'}")
 
         if result['details']:
             print("\n" + "-"*80)
-            print("DETALLS")
+            print("DETAILS")
             print("-"*80)
             for key, value in result['details'].items():
                 print(f"  • {key}: {value}")
 
         print("\n" + "-"*80)
-        print("RECOMANACIÓ")
+        print("RECOMMENDATION")
         print("-"*80)
         print(f"\n{result['recommendation']}")
 
         if not result['supported_by_librechat']:
-            print("\n💡 Possibles solucions:")
-            print("  1. Exportar les converses des del sistema original en un format compatible")
-            print("  2. Utilitzar un script de conversió per transformar el format")
-            print("  3. Importar manualment les converses una per una")
+            print("\n💡 Possible solutions:")
+            print("  1. Export conversations from the original system in a compatible format")
+            print("  2. Use a conversion script to transform the format")
+            print("  3. Manually import conversations one by one")
 
         print("\n" + "="*80)
 
@@ -288,18 +288,18 @@ class ConversationFormatAnalyzer:
 
 
 def main():
-    """Funció principal del script."""
+    """Main function of the script."""
     if len(sys.argv) < 2:
-        print("Ús: python diagnose_import.py <fitxer_json>")
-        print("\nExemples:")
-        print("  python diagnose_import.py conversa.json")
-        print("  python diagnose_import.py /ruta/al/fitxer.json")
+        print("Usage: python diagnose_import.py <json_file>")
+        print("\nExamples:")
+        print("  python diagnose_import.py conversation.json")
+        print("  python diagnose_import.py /path/to/file.json")
         sys.exit(1)
 
     file_path = sys.argv[1]
 
     if not Path(file_path).exists():
-        print(f"❌ Error: El fitxer '{file_path}' no existeix")
+        print(f"❌ Error: The file '{file_path}' does not exist")
         sys.exit(1)
 
     analyzer = ConversationFormatAnalyzer(file_path)

@@ -1,139 +1,139 @@
-# Scripts de Conversió de Converses
+# Conversation Conversion Scripts
 
-Aquest directori conté scripts per convertir converses entre diferents plataformes de xat amb IA.
+This directory contains scripts to convert conversations between different AI chat platforms.
 
-## Scripts Disponibles
+## Available Scripts
 
-### 1. `diagnose_import.py` - Diagnòstic de Format
+### 1. `diagnose_import.py` - Format Diagnostics
 
-Analitza fitxers JSON d'exportació per identificar el format i determinar si són compatibles amb LibreChat.
+Analyzes JSON export files to identify the format and determine if they are compatible with LibreChat.
 
-**Ús:**
+**Usage:**
 ```bash
-python3 diagnose_import.py <fitxer.json>
+python3 diagnose_import.py <file.json>
 ```
 
-**Exemple:**
+**Example:**
 ```bash
-python3 diagnose_import.py ~/Downloads/conversa.json
+python3 diagnose_import.py ~/Downloads/conversation.json
 ```
 
-**Sortida:**
-- Format detectat (LibreChat, ChatGPT, ChatbotUI, Claude, OpenWebUI, etc.)
-- Compatibilitat amb LibreChat
-- Detalls de l'estructura
-- Recomanacions
+**Output:**
+- Detected format (LibreChat, ChatGPT, ChatbotUI, Claude, OpenWebUI, etc.)
+- LibreChat compatibility
+- Structure details
+- Recommendations
 
-### 2. `openwebui_to_librechat.py` - Conversió OpenWebUI → LibreChat
+### 2. `openwebui_to_librechat.py` - OpenWebUI → LibreChat Conversion
 
-Converteix exportacions d'OpenWebUI a format compatible amb LibreChat.
+Converts OpenWebUI exports to LibreChat-compatible format.
 
-**Ús:**
+**Usage:**
 ```bash
-python3 openwebui_to_librechat.py <fitxer_openwebui.json> [fitxer_sortida.json]
+python3 openwebui_to_librechat.py <openwebui_file.json> [output_file.json]
 ```
 
-**Exemples:**
+**Examples:**
 ```bash
-# Conversió bàsica (el fitxer de sortida tindrà el sufix _librechat.json)
+# Basic conversion (output file will have _librechat.json suffix)
 python3 openwebui_to_librechat.py openwebui_export.json
 
-# Especificar fitxer de sortida
-python3 openwebui_to_librechat.py openwebui_export.json sortida.json
+# Specify output file
+python3 openwebui_to_librechat.py openwebui_export.json output.json
 ```
 
-**Característiques:**
-- ✅ Converteix múltiples converses
-- ✅ Preserva timestamps
-- ✅ Mapeja models als endpoints correctes
-- ✅ Suporta diversos formats d'exportació d'OpenWebUI
-- ✅ Converteix missatges multi-part (text + imatges)
+**Features:**
+- ✅ Converts multiple conversations
+- ✅ Preserves timestamps
+- ✅ Maps models to correct endpoints
+- ✅ Supports various OpenWebUI export formats
+- ✅ Converts multi-part messages (text + images)
 
-**Formats d'OpenWebUI suportats:**
-- Array de converses amb estructura `chat`
-- Array de converses amb `messages` directament
-- Diccionari amb clau `conversations`
-- Diccionari amb clau `chats`
+**Supported OpenWebUI formats:**
+- Array of conversations with `chat` structure
+- Array of conversations with `messages` directly
+- Dictionary with `conversations` key
+- Dictionary with `chats` key
 
-## Com Importar a LibreChat
+## How to Import to LibreChat
 
-### Pas 1: Exportar des d'OpenWebUI
-1. Obre OpenWebUI
-2. Ves a la conversa que vols exportar
-3. Clica als tres punts (⋮)
-4. Selecciona "Export"
-5. Tria format JSON
+### Step 1: Export from OpenWebUI
+1. Open OpenWebUI
+2. Go to the conversation you want to export
+3. Click on the three dots (⋮)
+4. Select "Export"
+5. Choose JSON format
 
-### Pas 2: Convertir el fitxer
+### Step 2: Convert the file
 ```bash
 python3 openwebui_to_librechat.py openwebui_export.json
 ```
 
-Això crearà un fitxer `openwebui_export_librechat.json`.
+This will create an `openwebui_export_librechat.json` file.
 
-### Pas 3: Importar a LibreChat
-1. Obre LibreChat
-2. Clica a "Settings" (⚙️)
-3. Ves a "Data Controls"
-4. Clica a "Import Conversations"
-5. Selecciona el fitxer `_librechat.json` generat
+### Step 3: Import to LibreChat
+1. Open LibreChat
+2. Click on "Settings" (⚙️)
+3. Go to "Data Controls"
+4. Click on "Import Conversations"
+5. Select the generated `_librechat.json` file
 
-## Formats Suportats per LibreChat
+## Formats Supported by LibreChat
 
-LibreChat accepta nativament aquests formats:
+LibreChat natively accepts these formats:
 
-| Format | Descripció | Identificador |
-|--------|------------|---------------|
-| **LibreChat** | Format natiu | `conversationId` + `messages` |
-| **ChatGPT** | Exportació d'OpenAI | Array amb `mapping` |
-| **ChatbotUI** | Format ChatbotUI | `version` + `history` |
-| **Claude** | Exportació d'Anthropic | Array amb `chat_messages` |
+| Format | Description | Identifier |
+|--------|-------------|------------|
+| **LibreChat** | Native format | `conversationId` + `messages` |
+| **ChatGPT** | OpenAI export | Array with `mapping` |
+| **ChatbotUI** | ChatbotUI format | `version` + `history` |
+| **Claude** | Anthropic export | Array with `chat_messages` |
 
-## Formats No Nadius (Requereixen Conversió)
+## Non-Native Formats (Require Conversion)
 
-| Format | Script de Conversió |
-|--------|---------------------|
+| Format | Conversion Script |
+|--------|-------------------|
 | **OpenWebUI** | `openwebui_to_librechat.py` |
 
-## Resolució de Problemes
+## Troubleshooting
 
 ### Error: "Unsupported import type"
 
-**Causa:** El fitxer JSON no és en un format compatible amb LibreChat.
+**Cause:** The JSON file is not in a LibreChat-compatible format.
 
-**Solució:**
-1. Executa `diagnose_import.py` per identificar el format:
+**Solution:**
+1. Run `diagnose_import.py` to identify the format:
    ```bash
-   python3 diagnose_import.py el_teu_fitxer.json
+   python3 diagnose_import.py your_file.json
    ```
-2. Si el format no és compatible, utilitza el script de conversió adequat
-3. Torna a intentar la importació amb el fitxer convertit
+2. If the format is not compatible, use the appropriate conversion script
+3. Try importing again with the converted file
 
 ### Error: "Only JSON files are allowed"
 
-**Causa:** LibreChat només accepta fitxers JSON per a importació.
+**Cause:** LibreChat only accepts JSON files for import.
 
-**Solució:** Assegura't que el fitxer té extensió `.json` i contingut JSON vàlid.
+**Solution:** Make sure the file has `.json` extension and valid JSON content.
 
-### Les converses es veuen buides
+### Conversations appear empty
 
-**Causa:** L'estructura dels missatges no s'ha convertit correctament.
+**Cause:** The message structure was not converted correctly.
 
-**Solució:**
-1. Obre el fitxer convertit amb un editor de text
-2. Verifica que l'estructura sigui correcta
-3. Si hi ha problemes, obre un issue al repositori
+**Solution:**
+1. Open the converted file with a text editor
+2. Verify that the structure is correct
+3. If there are problems, open an issue in the repository
 
-## Contribucions
+## Contributions
 
-Si necessites un script de conversió per a un altre format:
-1. Executa `diagnose_import.py` per identificar l'estructura
-2. Crea un nou script basat en `openwebui_to_librechat.py`
-3. Fes un pull request amb el nou script
+If you need a conversion script for another format:
+1. Run `diagnose_import.py` to identify the structure
+2. Create a new script based on `openwebui_to_librechat.py`
+3. Submit a pull request with the new script
 
-## Suport
+## Support
 
-Si trobes problemes o necessites ajuda:
-- Obre un issue al repositori
-- Inclou el fitxer d'exemple (sense dades sensibles)
-- Inclou la sortida de `diagnose_import.py`
+If you find problems or need help:
+- Open an issue in the repository
+- Include the example file (without sensitive data)
+- Include the output of `diagnose_import.py`
