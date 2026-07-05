@@ -97,6 +97,15 @@ mcpServers:
       DASHSCOPE_API_KEY: '${QWEN_API_KEY}'
     timeout: 120000
 
+  document-generator:
+    type: stdio
+    command: node
+    args:
+      - '/app/mcp-servers/document-generator/index.js'
+    env:
+      DOCUMENTS_PATH: '/app/uploads/documents'
+    timeout: 120000
+
 actions:
   allowedDomains:
     - 'dashscope-intl.aliyuncs.com'

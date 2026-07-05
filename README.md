@@ -7,6 +7,7 @@ Self-hosted AI chat platform built on [LibreChat](https://github.com/danny-avila
 - **Multi-provider AI**: Anthropic, Qwen, DeepSeek, Zhipu AI, and local models via Ollama
 - **Integrated web search**: SearXNG (local) + Tavily (scraper) + Jina (reranker)
 - **Image generation**: Qwen Image 2.0 Pro via MCP server
+- **Document generation**: Create PDF and Markdown documents from text, markdown, or HTML via MCP server
 - **Local models**: Ollama with GPU (NVIDIA) or CPU support
 - **Admin Panel**: User, group, role, and configuration management from the browser
 - **User management**: Admin-only registration, roles, and granular permissions
@@ -102,6 +103,48 @@ Web search uses 3 components:
 ## Image Generation
 
 The **qwen-image-2.0-pro** model is integrated via MCP server. Users can generate and edit images by requesting it from agents.
+
+## Document Generation
+
+The **document-generator** MCP server allows creating PDF and Markdown documents from text, markdown, or HTML content.
+
+### Features
+
+- **Markdown Generation**: Create `.md` files from any text format
+- **PDF Generation**: Create `.pdf` files with automatic formatting
+- **Smart Content Detection**: Automatically detects plain text, markdown, or HTML
+- **Flexible Input**: Accepts content in plain text, markdown, or HTML format
+
+### Usage
+
+Users can request document generation from agents or directly in chat:
+
+```
+User: Create a PDF document with the following content:
+"# Project Report
+
+## Summary
+This project has achieved all its goals.
+
+## Key Metrics
+- Completion: 100%
+- Budget: On track
+- Timeline: Ahead of schedule"
+
+AI: [Calls generate_pdf tool]
+```
+
+### Output Location
+
+Generated documents are saved to `/app/uploads/documents/` and can be downloaded from the LibreChat interface.
+
+### Technical Details
+
+- **Dependencies**: `pdfkit` (PDF generation), `marked` (Markdown parser)
+- **Configuration**: Set `DOCUMENTS_PATH` environment variable to customize output directory
+- **Timeout**: 120 seconds per document generation
+
+See [document-generator README](librechat/mcp-servers/document-generator/README.md) for detailed documentation.
 
 ## Model Configuration
 
