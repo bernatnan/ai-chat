@@ -1,0 +1,61 @@
+[
+  {
+    "id": "conv-001",
+    "title": "Conversa de prova sobre programació",
+    "model": "gpt-4",
+    "created_at": "2024-01-15T10:30:00Z",
+    "chat": {
+      "messages": [
+        {
+          "id": "msg-001",
+          "role": "user",
+          "content": "Com puc aprendre Python?",
+          "timestamp": 1705312200
+        },
+        {
+          "id": "msg-002",
+          "role": "assistant",
+          "content": "Python és un llenguatge excel·lent per començar! Et recomano:\n\n1. **Recursos oficials**: python.org té tutorials gratuïts\n2. **Plataformes interactives**: Codecademy, freeCodeCamp\n3. **Llibres**: 'Automate the Boring Stuff with Python' és gratuït online\n4. **Pràctica**: Fes projectes petits des del principi\n\nQuin és el teu objectiu principal amb Python?",
+          "model": "gpt-4",
+          "timestamp": 1705312260
+        },
+        {
+          "id": "msg-003",
+          "role": "user",
+          "content": "Vull fer anàlisi de dades i machine learning",
+          "timestamp": 1705312320
+        },
+        {
+          "id": "msg-004",
+          "role": "assistant",
+          "content": "Perfecte! Per a anàlisi de dades i ML amb Python, segueix aquesta ruta:\n\n**Fonaments (1-2 mesos):**\n- Sintaxi bàsica de Python\n- Estructures de dades\n- Funcions i mòduls\n\n**Biblioteques essencials (2-3 mesos):**\n- NumPy: Càlcul numèric\n- Pandas: Manipulació de dades\n- Matplotlib/Seaborn: Visualització\n\n**Machine Learning (3-6 mesos):**\n- Scikit-learn: Algorismes clàssics\n- TensorFlow o PyTorch: Deep learning\n\n**Projectes recomanats:**\n1. Anàlisi de dades de Kaggle\n2. Predicció de preus d'habitatges\n3. Classificador d'imatges\n\nVols que et recomani recursos específics per a alguna d'aquestes àrees?",
+          "model": "gpt-4",
+          "timestamp": 1705312380
+        }
+      ]
+    }
+  },
+  {
+    "id": "conv-002",
+    "title": "Preguntes sobre Docker",
+    "model": "claude-3-sonnet",
+    "created_at": "2024-01-16T14:20:00Z",
+    "chat": {
+      "messages": [
+        {
+          "id": "msg-005",
+          "role": "user",
+          "content": "Què és Docker i per a què serveix?",
+          "timestamp": 1705414800
+        },
+        {
+          "id": "msg-006",
+          "role": "assistant",
+          "content": "Docker és una plataforma de **contenidors** que permet empaquetar aplicacions amb totes les seves dependències.\n\n**Conceptes clau:**\n\n📦 **Contenidor**: Una instància executable d'una imatge\n🖼️ **Imatge**: Plantilla de només lectura amb codi, biblioteques i configuració\n📋 **Dockerfile**: Fitxer que defineix com construir una imatge\n\n**Avantatges:**\n- ✅ **Portabilitat**: Funciona igual a qualsevol sistema\n- ✅ **Isolament**: Cada aplicació en el seu propi entorn\n- ✅ **Reproductibilitat**: Mateix comportament sempre\n- ✅ **Eficiència**: Més lleuger que les màquines virtuals\n\n**Casos d'ús comuns:**\n- Desenvolupament local consistent\n- Desplegament d'aplicacions\n- Microserveis\n- Testing automatitzat\n\nVols que t'expliqui com instal·lar-lo o com crear el teu primer contenidor?",
+          "model": "claude-3-sonnet",
+          "timestamp": 1705414860
+        }
+      ]
+    }
+  }
+]

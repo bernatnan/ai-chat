@@ -14,6 +14,7 @@ Plataforma de xat amb IA auto-allotjada, construïda sobre [LibreChat](https://g
 - **RAG**: Retrieval-Augmented Generation amb pgvector
 - **Cerca full-text**: Meilisearch per cercar en converses
 - **Privacitat**: Totes les dades es guarden localment
+- **Migració de converses**: Scripts per convertir converses des d'OpenWebUI i altres plataformes
 
 ## Arquitectura
 
@@ -277,6 +278,48 @@ docker compose exec api npm run invite-user usuari@exemple.com
 # Llistar usuaris
 docker compose exec api npm run list-users
 ```
+
+## Migració de converses
+
+El projecte inclou scripts per convertir converses des d'altres plataformes (com OpenWebUI) a format compatible amb LibreChat.
+
+### Scripts disponibles
+
+**Diagnòstic de format:**
+```bash
+# Analitza un fitxer JSON per identificar el format
+python3 scripts/diagnose_import.py conversa.json
+```
+
+**Conversió OpenWebUI → LibreChat:**
+```bash
+# Converteix exportacions d'OpenWebUI a format LibreChat
+python3 scripts/openwebui_to_librechat.py openwebui_export.json
+```
+
+### Com importar converses
+
+1. **Exporta** les converses des d'OpenWebUI (format JSON)
+2. **Converteix** el fitxer amb el script:
+   ```bash
+   python3 scripts/openwebui_to_librechat.py openwebui_export.json
+   ```
+3. **Importa** a LibreChat:
+   - Ves a Settings → Data Controls → Import Conversations
+   - Selecciona el fitxer `_librechat.json` generat
+
+### Formats suportats
+
+**Nadius (sense conversió):**
+- LibreChat (natiu)
+- ChatGPT (OpenAI)
+- ChatbotUI
+- Claude (Anthropic)
+
+**Requereixen conversió:**
+- OpenWebUI → Utilitza `openwebui_to_librechat.py`
+
+Veure [scripts/README.md](scripts/README.md) per a més detalls.
 
 ## Actualitzacions
 
