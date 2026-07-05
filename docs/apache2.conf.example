@@ -1,18 +1,18 @@
-# Apache2 Reverse Proxy Configuration for AI Chat Stack
+# Configuració Apache2 Reverse Proxy per a AI Chat Stack
 #
-# Prerequisites:
+# Prerequisits:
 #   sudo a2enmod proxy proxy_http proxy_wstunnel rewrite headers ssl remoteip
 #   sudo systemctl restart apache2
 #
-# Copy this file to /etc/apache2/sites-available/ai-chat.conf
-# Then: sudo a2ensite ai-chat && sudo systemctl reload apache2
+# Copia aquest fitxer a /etc/apache2/sites-available/ai-chat.conf
+# Després: sudo a2ensite ai-chat && sudo systemctl reload apache2
 #
-# Cloudflare Configuration:
+# Configuració Cloudflare:
 #   - DNS amb proxy activat (taronja) per chat.example.com i admin.chat.example.com
-#   - SSL/TLS mode: "Full (Strict)" recomanat
+#   - Mode SSL/TLS: "Full (Strict)" recomanat
 #   - A Page Rules, afegir "Always Use HTTPS"
 
-# HTTP - Redirect to HTTPS (aplica a tots els subdominis)
+# HTTP - Redirigir a HTTPS (aplica a tots els subdominis)
 <VirtualHost *:80>
     ServerName chat.example.com
     ServerAlias admin.chat.example.com
@@ -26,12 +26,12 @@
 <VirtualHost *:443>
     ServerName chat.example.com
 
-    # SSL Configuration (Let's Encrypt)
+    # Configuració SSL (Let's Encrypt)
     SSLEngine on
     SSLCertificateFile /etc/letsencrypt/live/chat.example.com/fullchain.pem
     SSLCertificateKeyFile /etc/letsencrypt/live/chat.example.com/privkey.pem
 
-    # Modern SSL configuration
+    # Configuració SSL moderna
     SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1
     SSLCipherSuite ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384
     SSLHonorCipherOrder off
@@ -39,8 +39,8 @@
     # HSTS (Strict-Transport-Security)
     Header always set Strict-Transport-Security "max-age=63072000"
 
-    # Cloudflare Proxy Configuration
-    # Trust Cloudflare IPs for real client IP detection
+    # Configuració Proxy Cloudflare
+    # Confiar en les IPs de Cloudflare per detectar la IP real del client
     # IPs de Cloudflare: https://www.cloudflare.com/ips/
     RemoteIPHeader CF-Connecting-IP
     RemoteIPInternalProxy 173.245.48.0/20
@@ -59,41 +59,41 @@
     RemoteIPInternalProxy 172.64.0.0/13
     RemoteIPInternalProxy 131.0.72.0/22
 
-    # Proxy Configuration
+    # Configuració Proxy
     ProxyPreserveHost On
     ProxyPass / http://localhost:3080/ flushpackets=on
     ProxyPassReverse / http://localhost:3080/
 
-    # WebSocket support (for SSE streaming)
+    # Suport WebSocket (per a streaming SSE)
     RewriteEngine On
     RewriteCond %{HTTP:Upgrade} =websocket [NC]
     RewriteRule /(.*) ws://localhost:3080/$1 [P,L]
 
-    # Increase timeout for long-running AI responses
+    # Augmentar timeout per a respostes llargues d'IA
     ProxyTimeout 300
 
-    # Increase request body size for file uploads (25MB)
+    # Augmentar mida del cos de petició per a pujades de fitxers (25MB)
     LimitRequestBody 26214400
 
-    # Disable response buffering for streaming
+    # Desactivar buffering de resposta per a streaming
     SetEnv proxy-no-buffering 1
 
-    # Security headers
+    # Capçaleres de seguretat
     Header always set X-Content-Type-Options nosniff
     Header always set X-Frame-Options SAMEORIGIN
     Header always set X-XSS-Protection "1; mode=block"
 </VirtualHost>
 
-# HTTPS - Admin Panel
+# HTTPS - Panell d'Administració
 <VirtualHost *:443>
     ServerName admin.chat.example.com
 
-    # SSL Configuration (Let's Encrypt)
+    # Configuració SSL (Let's Encrypt)
     SSLEngine on
     SSLCertificateFile /etc/letsencrypt/live/chat.example.com/fullchain.pem
     SSLCertificateKeyFile /etc/letsencrypt/live/chat.example.com/privkey.pem
 
-    # Modern SSL configuration
+    # Configuració SSL moderna
     SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1
     SSLCipherSuite ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384
     SSLHonorCipherOrder off
@@ -101,7 +101,7 @@
     # HSTS (Strict-Transport-Security)
     Header always set Strict-Transport-Security "max-age=63072000"
 
-    # Cloudflare Proxy Configuration
+    # Configuració Proxy Cloudflare
     RemoteIPHeader CF-Connecting-IP
     RemoteIPInternalProxy 173.245.48.0/20
     RemoteIPInternalProxy 103.21.244.0/22
@@ -119,12 +119,12 @@
     RemoteIPInternalProxy 172.64.0.0/13
     RemoteIPInternalProxy 131.0.72.0/22
 
-    # Proxy Configuration
+    # Configuració Proxy
     ProxyPreserveHost On
     ProxyPass / http://localhost:3000/
     ProxyPassReverse / http://localhost:3000/
 
-    # Security headers
+    # Capçaleres de seguretat
     Header always set X-Content-Type-Options nosniff
     Header always set X-Frame-Options DENY
     Header always set X-XSS-Protection "1; mode=block"

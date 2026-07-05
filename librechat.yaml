@@ -51,7 +51,7 @@ interface:
 registration:
   socialLogins: []
 
-# Web Search Configuration
+# Configuració de Cerca Web
 webSearch:
   searchProvider: searxng
   searxngInstanceUrl: '${SEARXNG_INSTANCE_URL}'
@@ -81,7 +81,7 @@ endpoints:
     - '127.0.0.1:11434'
     - 'host.docker.internal:11434'
 
-# MCP Servers
+# Servidors MCP
 mcpServers:
   qwen-image:
     type: stdio

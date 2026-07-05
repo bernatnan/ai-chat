@@ -2,15 +2,15 @@
 set -e
 
 echo "========================================="
-echo "  AI Chat Stack - Setup Script"
+echo "  AI Chat Stack - Script de Configuració"
 echo "========================================="
 
-# Check if .env exists
+# Comprovar si existeix .env
 if [ ! -f .env ]; then
-    echo "[1/6] Creating .env from template..."
+    echo "[1/6] Creant .env des de la plantilla..."
     cp .env.template .env
 
-    # Generate secrets
+    # Generar secrets
     JWT_SECRET=$(openssl rand -hex 32)
     JWT_REFRESH_SECRET=$(openssl rand -hex 32)
     CREDS_KEY=$(openssl rand -hex 32)
@@ -19,7 +19,7 @@ if [ ! -f .env ]; then
     SEARXNG_SECRET=$(openssl rand -hex 32)
     ADMIN_PANEL_SECRET=$(openssl rand -hex 32)
 
-    # Replace placeholders
+    # Reemplaçar placeholders
     sed -i "s/GENERATE_JWT_SECRET/$JWT_SECRET/" .env
     sed -i "s/GENERATE_JWT_REFRESH_SECRET/$JWT_REFRESH_SECRET/" .env
     sed -i "s/GENERATE_CREDS_KEY/$CREDS_KEY/" .env
@@ -28,70 +28,70 @@ if [ ! -f .env ]; then
     sed -i "s/GENERATE_SEARXNG_SECRET/$SEARXNG_SECRET/" .env
     sed -i "s/GENERATE_ADMIN_PANEL_SECRET/$ADMIN_PANEL_SECRET/" .env
 
-    echo "  -> Secrets generated!"
+    echo "  -> Secrets generats!"
     echo ""
-    echo "  IMPORTANT: Edit .env now to configure:"
-    echo "    - DOMAIN_CLIENT and DOMAIN_SERVER (your domain)"
-    echo "    - API keys for Qwen, DeepSeek, Anthropic, Zhipu AI"
-    echo "    - TAVILY_API_KEY (web search scraper - https://tavily.com)"
-    echo "    - JINA_API_KEY (web search reranker - https://jina.ai/api-dashboard/)"
-    echo "    - SMTP settings (optional)"
+    echo "  IMPORTANT: Editar .env ara per configurar:"
+    echo "    - DOMAIN_CLIENT i DOMAIN_SERVER (el teu domini)"
+    echo "    - API keys per Qwen, DeepSeek, Anthropic, Zhipu AI"
+    echo "    - TAVILY_API_KEY (scraper de cerca web - https://tavily.com)"
+    echo "    - JINA_API_KEY (reranker de cerca web - https://jina.ai/api-dashboard/)"
+    echo "    - Configuració SMTP (opcional)"
     echo ""
-    echo "  Run: nano .env"
+    echo "  Executa: nano .env"
     echo ""
-    read -p "  Press ENTER when ready to continue..."
+    read -p "  Prem ENTER quan estiguis a punt per continuar..."
 else
-    echo "[1/6] .env already exists, skipping..."
+    echo "[1/6] .env ja existeix, saltant..."
 fi
 
-# Initialize submodules
-echo "[2/6] Initializing git submodules..."
+# Inicialitzar submòduls
+echo "[2/6] Inicialitzant submòduls git..."
 git submodule update --init --recursive
-echo "  -> Done!"
+echo "  -> Fet!"
 
-# Create necessary directories
-echo "[3/6] Creating directories..."
+# Crear directoris necessaris
+echo "[3/6] Creant directoris..."
 mkdir -p data-node meili_data uploads logs images skill
-echo "  -> Done!"
+echo "  -> Fet!"
 
-# Build and start containers
-echo "[4/6] Building and starting containers..."
+# Construir i iniciar contenidors
+echo "[4/6] Construint i iniciant contenidors..."
 docker compose up -d --build
-echo "  -> Containers started!"
+echo "  -> Contenidors iniciats!"
 
-# Wait for services to be ready
-echo "[5/6] Waiting for services to be ready..."
+# Esperar que els serveis estiguin llestos
+echo "[5/6] Esperant que els serveis estiguin llestos..."
 sleep 15
 
-# Check if Ollama is running
-echo "[6/6] Checking Ollama status..."
+# Comprovar si Ollama s'està executant
+echo "[6/6] Comprovant estat d'Ollama..."
 if docker exec ollama ollama list > /dev/null 2>&1; then
-    echo "  -> Ollama is ready!"
+    echo "  -> Ollama està llest!"
 else
-    echo "  -> Ollama is starting up (may take a moment)..."
+    echo "  -> Ollama s'està iniciant (pot trigar una estona)..."
 fi
 
 echo ""
 echo "========================================="
-echo "  Setup Complete!"
+echo "  Configuració Completada!"
 echo "========================================="
 echo ""
-echo "AI Chat Stack is running at: http://localhost:3080"
+echo "AI Chat Stack s'està executant a: http://localhost:3080"
 echo ""
-echo "Next steps:"
-echo "  1. Create the first admin user:"
+echo "Propers passos:"
+echo "  1. Crear el primer usuari administrador:"
 echo "     docker compose exec api npm run create-user"
 echo ""
-echo "  2. Pull Ollama models (optional):"
+echo "  2. Descarregar models d'Ollama (opcional):"
 echo "     docker exec -it ollama ollama pull llama3.2"
 echo "     docker exec -it ollama ollama pull qwen2.5"
 echo "     docker exec -it ollama ollama pull deepseek-r1"
 echo ""
-echo "  3. Configure Apache2 reverse proxy (see docs/apache2.conf.example)"
+echo "  3. Configurar Apache2 com a reverse proxy (veure docs/apache2.conf.example)"
 echo ""
-echo "  4. Enable Cloudflare Turnstile (edit librechat.yaml)"
+echo "  4. Activar Cloudflare Turnstile (editar librechat.yaml)"
 echo ""
-echo "  5. Test web search:"
-echo "     SearXNG is running at: http://localhost:8080"
-echo "     Make sure you've configured TAVILY_API_KEY and JINA_API_KEY in .env"
+echo "  5. Provar la cerca web:"
+echo "     SearXNG s'està executant a: http://localhost:8080"
+echo "     Assegura't d'haver configurat TAVILY_API_KEY i JINA_API_KEY a .env"
 echo ""
