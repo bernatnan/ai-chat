@@ -128,6 +128,40 @@ endpoints:
 
 Currently, **Qwen** and **Ollama** have `fetch: true`, the rest have `fetch: false`.
 
+### File Analysis with Any Model
+
+If you want PDFs and other documents to work with models that do **not** support native file input, use an **Agent** with the `file_search` capability enabled.
+
+How it works:
+- The uploaded file is stored and embedded through the RAG API
+- LibreChat queries the vector database for relevant chunks
+- Only the retrieved text context is sent to the model
+
+This means you can analyze PDFs with models such as Qwen, DeepSeek, or local Ollama models, even when they do not support direct `file` message parts.
+
+Required environment variables:
+
+```bash
+RAG_API_URL=http://rag_api:8000
+RAG_OPENAI_BASEURL=http://ollama:11434/v1
+RAG_OPENAI_API_KEY=ollama
+RAG_USE_FULL_CONTEXT=false
+EMBEDDINGS_PROVIDER=openai
+EMBEDDINGS_MODEL=nomic-embed-text
+```
+
+Recommended local embeddings model:
+
+```bash
+docker exec -it ollama ollama pull nomic-embed-text
+```
+
+Recommended workflow:
+1. Create an Agent using the model you want
+2. Ensure the Agent has `file_search` enabled
+3. Upload the PDF to the Agent, not to a plain chat
+4. Ask questions about the file
+
 ### Changing Default Models
 
 Edit `librechat.yaml` and modify the `models.default` list for the provider you want. Then restart:

@@ -73,6 +73,9 @@ nano .env
 | `ZHIPU_API_KEY` | Zhipu AI API key |
 | `TAVILY_API_KEY` | Tavily API key (web scraping) |
 | `JINA_API_KEY` | Jina API key (reranker) |
+| `RAG_OPENAI_BASEURL` | Embeddings provider base URL for RAG (e.g. `http://ollama:11434/v1`) |
+| `RAG_OPENAI_API_KEY` | Embeddings provider API key (can be `ollama` for local Ollama) |
+| `EMBEDDINGS_MODEL` | Embeddings model used by the RAG API (e.g. `nomic-embed-text`) |
 
 **SMTP (optional):**
 
@@ -243,6 +246,34 @@ Web search uses 3 components:
 ## Image Generation
 
 The **qwen-image-2.0-pro** model is integrated via MCP server. Users can generate and edit images by requesting it from agents.
+
+## File Analysis with RAG
+
+To analyze PDFs with models that do not support direct file input, use an **Agent** with the `file_search` capability.
+
+Recommended setup:
+
+```bash
+# Install a local embeddings model for Ollama
+docker exec -it ollama ollama pull nomic-embed-text
+```
+
+Recommended `.env` values:
+
+```bash
+RAG_API_URL=http://rag_api:8000
+RAG_OPENAI_BASEURL=http://ollama:11434/v1
+RAG_OPENAI_API_KEY=ollama
+RAG_USE_FULL_CONTEXT=false
+EMBEDDINGS_PROVIDER=openai
+EMBEDDINGS_MODEL=nomic-embed-text
+```
+
+Recommended usage flow:
+1. Create an Agent with the model you want to use
+2. Enable the `file_search` capability on that Agent
+3. Upload the PDF to the Agent
+4. Ask questions about the document
 
 ## User Management
 

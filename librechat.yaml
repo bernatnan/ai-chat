@@ -61,6 +61,11 @@ webSearch:
   jinaApiKey: '${JINA_API_KEY}'
 
 endpoints:
+  agents:
+    recursionLimit: 25
+    maxRecursionLimit: 50
+    capabilities: ["file_search", "actions", "tools"]
+
   custom:
     # Ollama (local models - basic configuration)
     - name: 'Ollama'
