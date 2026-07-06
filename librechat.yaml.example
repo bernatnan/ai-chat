@@ -171,6 +171,20 @@ endpoints:
       titleModel: 'current_model'
       modelDisplayLabel: 'Ollama (Local)'
 
+    # OpenRouter (multi-provider gateway)
+    - name: 'OpenRouter'
+      apiKey: '${OPENROUTER_KEY}'
+      baseURL: 'https://openrouter.ai/api/v1'
+      models:
+        default:
+          - 'meta-llama/llama-3.1-70b-instruct'
+          - 'deepseek/deepseek-chat'
+        fetch: true
+      titleConvo: true
+      titleModel: 'meta-llama/llama-3.1-70b-instruct'
+      modelDisplayLabel: 'OpenRouter'
+      dropParams: ['stop']
+
   allowedAddresses:
     - 'ollama:11434'
     - 'localhost:11434'
@@ -196,6 +210,7 @@ actions:
     - 'dashscope.aliyuncs.com'
     - 'api.deepseek.com'
     - 'open.bigmodel.cn'
+    - 'openrouter.ai'
   allowedAddresses:
     - 'ollama:11434'
     - 'localhost:11434'
