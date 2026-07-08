@@ -122,7 +122,7 @@ services:
 
   localai:
     container_name: localai
-    image: localai/localai:latest-aio-cpu
+    image: localai/localai:master-ffmpeg-core
     restart: always
     ports:
       - "${LOCALAI_PORT:-8180}:8080"
