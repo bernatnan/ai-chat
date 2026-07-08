@@ -10,6 +10,7 @@ services:
       - mongodb
       - rag_api
       - searxng
+      - localai
     restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -19,7 +20,7 @@ services:
       - MEILI_HOST=http://meilisearch:7700
       - RAG_PORT=${RAG_PORT:-8000}
       - RAG_API_URL=http://rag_api:${RAG_PORT:-8000}
-      - NO_PROXY=${NO_PROXY:-localhost,127.0.0.1,::1},mongodb,meilisearch,rag_api,vectordb,host.docker.internal,ollama,searxng,valkey
+      - NO_PROXY=${NO_PROXY:-localhost,127.0.0.1,::1},mongodb,meilisearch,rag_api,vectordb,host.docker.internal,ollama,searxng,valkey,localai
     volumes:
       - ./.env:/app/.env
       - ./librechat.yaml:/app/librechat.yaml
@@ -119,8 +120,22 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  localai:
+    container_name: localai
+    image: localai/localai:latest-ffmpeg-core
+    restart: always
+    ports:
+      - "${LOCALAI_PORT:-8180}:8080"
+    environment:
+      - THREADS=${LOCALAI_THREADS:-4}
+    volumes:
+      - localai_models:/build/models
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
 volumes:
   pgdata:
   ollama_data:
   searxng_data:
   valkey_data:
+  localai_models:

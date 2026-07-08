@@ -1,0 +1,19 @@
+name: localai-tts-stt
+parameters:
+  model: tts-1
+  voice: ca_ES-upc_ona-medium
+  threads: 4
+
+models:
+  - name: tts-1
+    type: tts
+    parameters:
+      model: piper
+      voice: ca_ES-upc_ona-medium
+
+  - name: whisper-1
+    type: stt
+    parameters:
+      model: whisper
+      file: whisper-tiny
+      language: ca

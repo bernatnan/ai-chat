@@ -51,6 +51,35 @@ interface:
 registration:
   socialLogins: []
 
+# Speech (TTS/STT)
+speech:
+  tts:
+    localai:
+      url: 'http://localai:8180'
+      apiKey: ''
+      model: 'tts-1'
+      voices:
+        - 'ca_ES-upc_ona-medium'
+        - 'ca_ES-upc_pau-medium'
+        - 'es_ES-sharvard-medium'
+        - 'es_ES-davefx-medium'
+        - 'en_US-amy-medium'
+        - 'en_US-joe-medium'
+        - 'fr_FR-siwis-medium'
+        - 'fr_FR-gilles-medium'
+        - 'it_IT-paola-medium'
+        - 'it_IT-riccardo-medium'
+  stt:
+    localai:
+      url: 'http://localai:8180'
+      apiKey: ''
+      model: 'whisper-1'
+  speechTab:
+    textToSpeech: true
+    speechToText: true
+    autoSendSpeech: true
+    preferredVoice: 'ca_ES-upc_ona-medium'
+
 # Web Search Configuration
 webSearch:
   searchProvider: searxng
