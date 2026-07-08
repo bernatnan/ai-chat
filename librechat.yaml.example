@@ -59,6 +59,7 @@ speech:
       url: 'http://localai:8180'
       apiKey: ''
       model: 'tts-1'
+      backend: 'piper'
       voices:
         - 'ca_ES-upc_ona-medium'
         - 'ca_ES-upc_pau-medium'
@@ -71,8 +72,8 @@ speech:
         - 'it_IT-paola-medium'
         - 'it_IT-riccardo-medium'
   stt:
-    localai:
-      url: 'http://localai:8180'
+    openai:
+      url: 'http://localai:8180/v1'
       apiKey: ''
       model: 'whisper-1'
   speechTab:
