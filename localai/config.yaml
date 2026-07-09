@@ -1,12 +1,10 @@
+name: whisper-1
+backend: whisper
+parameters:
+  model: ggml-tiny.bin
+---
 name: tts-1
-type: tts
+backend: piper
 parameters:
   model: piper
   voice: ca_ES-upc_ona-medium
----
-name: whisper-1
-type: stt
-parameters:
-  model: whisper
-  file: whisper-tiny
-  language: ca
