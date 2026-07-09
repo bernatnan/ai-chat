@@ -130,6 +130,7 @@ services:
       - THREADS=${LOCALAI_THREADS:-4}
     volumes:
       - localai_models:/build/models
+      - ./localai/config.yaml:/build/models/config.yaml:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
