@@ -128,8 +128,6 @@ services:
       - "${LOCALAI_PORT:-8180}:8080"
     environment:
       - THREADS=${LOCALAI_THREADS:-4}
-      - REBUILD=true
-      - CMAKE_ARGS=-DGGML_AVX2=OFF -DGGML_AVX512=OFF -DGGML_FMA=OFF
     volumes:
       - localai_models:/build/models
       - ./localai/config.yaml:/build/models/config.yaml:ro
