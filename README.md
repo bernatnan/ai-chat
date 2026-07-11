@@ -398,6 +398,89 @@ python3 scripts/openwebui_to_librechat.py openwebui_export.json
 
 See [scripts/README.md](scripts/README.md) for more details.
 
+## Deploy on New Server
+
+Full deployment from scratch (e.g., after moving disks to new hardware).
+
+```bash
+# 1. Prerequisites
+sudo apt install git docker docker-compose-v2
+
+# 2. Clone the repository
+cd /srv
+git clone https://github.com/bernatnan/ai-chat.git
+cd ai-chat
+
+# 3. Init submodules
+git submodule update --init --recursive
+
+# 4. Create .env from template with generated secrets
+cp .env.template .env
+# Manually add: API keys for Qwen/DeepSeek/Anthropic/Zhipu/Tavily/Jina/OpenRouter
+# vim .env
+
+# 5. Copy local LibreChat config (gitignored)
+cp librechat.yaml.local librechat.yaml
+
+# 6. Verify CPU supports required instructions
+grep -E 'avx|avx2|sse4_2' /proc/cpuinfo
+
+# 7. Start all services
+docker compose up -d
+
+# 8. Create admin user
+docker compose exec api npm run create-user
+
+# 9. Verify health
+curl http://localhost:3080
+curl http://localhost:8080  # SearXNG
+curl http://localhost:11434 # Ollama
+curl http://localhost:8180/readyz  # LocalAI
+curl http://localhost:8180/v1/models  # Should show whisper-1 and tts-1
+
+# 10. Set up backups
+# See Backup section below
+```
+
+### Migrating from existing volume
+
+If moving from another server:
+
+```bash
+# 1. Stop services on old server
+docker compose down
+
+# 2. Copy persistent data
+rsync -avz --progress /srv/ai-chat/data-node/ user@new-server:/srv/ai-chat/data-node/
+rsync -avz --progress /srv/ai-chat/uploads/ user@new-server:/srv/ai-chat/uploads/
+rsync -avz --progress /srv/ai-chat/images/ user@new-server:/srv/ai-chat/images/
+rsync -avz --progress /srv/ai-chat/.env user@new-server:/srv/ai-chat/.env
+rsync -avz --progress /srv/ai-chat/librechat.yaml user@new-server:/srv/ai-chat/librechat.yaml
+
+# 3. On new server, start with existing data
+docker compose up -d
+```
+
+### Restoring from Restic backup
+
+```bash
+# 1. Install restic and set up environment
+# See Backup section below for setup
+
+# 2. Restore MongoDB
+restic -r /mnt/backup/librechat restore latest --target /tmp/restore
+cp -a /tmp/restore/srv/ai-chat/data-node/* /srv/ai-chat/data-node/
+
+# 3. Restore project files
+restic -r /mnt/backup/librechat restore latest \
+  --target /tmp/restore \
+  --exclude="data-node"
+cp -a /tmp/restore/srv/ai-chat/* /srv/ai-chat/
+
+# 4. Start services
+docker compose up -d
+```
+
 ## Backup
 
 Daily encrypted backups using [Restic](https://restic.net/). Backups are stored in two locations:
