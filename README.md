@@ -398,6 +398,55 @@ python3 scripts/openwebui_to_librechat.py openwebui_export.json
 
 See [scripts/README.md](scripts/README.md) for more details.
 
+## Backup
+
+Daily encrypted backups using [Restic](https://restic.net/). Backups are stored in two locations:
+- **Local**: a Debian server on the LAN (`/mnt/backup/librechat`)
+- **Remote**: Hetzner Storage Box via SFTP
+
+### What's backed up
+
+| Path | Contents | Why |
+|---|---|---|
+| `data-node/` | MongoDB database | Conversations, users, config overrides |
+| `uploads/` | User uploaded files | Images, documents, audio |
+| `images/` | Generated images | MCP-generated content |
+| `.env` | Environment secrets | API keys, tokens |
+| `librechat.yaml` | Local LibreChat config | Gitignored, not in repo |
+
+### What's excluded
+
+Everything tracked by Git (recoverable from GitHub) and model files (redownloadable):
+`ollama_data/`, `localai_models/`, `searxng_data/`, `valkey_data/`, `pgdata/`, `meili_data/`, `logs/`, `tmp/`, `node_modules/`
+
+### Setup
+
+```bash
+# 1. Install Restic
+sudo apt install restic
+
+# 2. Create password (or use passage)
+passage insert restic/librechat
+
+# 3. Copy environment template and edit
+cp scripts/restic-env.sh.template /root/.restic/restic-env.sh
+vim /root/.restic/restic-env.sh
+
+# 4. Initialize repositories
+restic -r /mnt/backup/librechat init
+restic -r sftp:user@storagebox:backups/librechat init
+
+# 5. Copy cron file
+sudo cp scripts/restic-cron /etc/cron.d/restic-backup
+
+# 6. Test manually
+sudo /srv/ai-chat/scripts/backup.sh
+```
+
+### Files
+
+See [`scripts/backup.sh`](scripts/backup.sh), [`scripts/restic-exclude.txt`](scripts/restic-exclude.txt), and [`scripts/restic-env.sh.template`](scripts/restic-env.sh.template).
+
 ## Updates
 
 ```bash

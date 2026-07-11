@@ -1,0 +1,16 @@
+.git/
+.gitignore
+.gitmodules
+librechat/
+librechat.yaml.*
+librechat.yaml.example
+node_modules/
+.DS_Store
+tmp/
+ollama_data/
+localai_models/
+logs/
+meili_data/
+searxng_data/
+valkey_data/
+pgdata/

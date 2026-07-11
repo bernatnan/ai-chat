@@ -1,0 +1,9 @@
+# Restic environment variables
+# Copy to /root/.restic/restic-env.sh and fill in your values
+
+export RESTIC_PASSWORD_FILE=/root/.restic/restic-password.txt
+export RESTIC_REPO_LOCAL=/mnt/backup/librechat
+export RESTIC_REPO_REMOTE=sftp:user@storagebox:backups/librechat
+export RESTIC_KEEP_DAILY=7
+export RESTIC_KEEP_WEEKLY=4
+export RESTIC_KEEP_MONTHLY=6

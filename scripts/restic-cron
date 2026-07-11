@@ -1,0 +1,2 @@
+# Restic backup for LibreChat — runs daily at 04:00 UTC
+0 4 * * * root /srv/ai-chat/scripts/backup.sh >/dev/null 2>&1
