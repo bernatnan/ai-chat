@@ -13,9 +13,11 @@ export RESTIC_PASSWORD_FILE=/root/.restic/restic-password.txt
 # export RESTIC_PASSWORD=$(passage show restic/librechat)
 
 # --- Local repo ---
+# Must match the path used with: restic -r "$RESTIC_REPO_LOCAL" init
 export RESTIC_REPO_LOCAL=/mnt/backup/librechat
 
 # --- Remote repo (S3-compatible, e.g. iDrive E2) ---
+# Must match the path used with: restic -r "$RESTIC_REPO_REMOTE" init
 export RESTIC_REPO_REMOTE=s3:us-east-1.linodeobjects.com/librechat-backup
 export AWS_ACCESS_KEY_ID=your_access_key
 export AWS_SECRET_ACCESS_KEY=your_secret_key

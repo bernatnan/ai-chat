@@ -518,6 +518,7 @@ sudo cp scripts/restic-env.sh.template /root/.restic/restic-env.sh
 sudo vim /root/.restic/restic-env.sh
 
 # 4. Initialize repositories
+# Note: these paths must match RESTIC_REPO_LOCAL and RESTIC_REPO_REMOTE in restic-env.sh
 restic -r /mnt/backup/librechat init
 restic -r s3:us-east-1.linodeobjects.com/librechat-backup init
 
