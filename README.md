@@ -483,9 +483,7 @@ docker compose up -d
 
 ## Backup
 
-Daily encrypted backups using [Restic](https://restic.net/). Backups are stored in two locations:
-- **Local**: a Debian server on the LAN (`/mnt/backup/librechat`)
-- **Remote**: Hetzner Storage Box via SFTP
+Daily encrypted backups using [Restic](https://restic.net/). Supports two independent targets — **local** (LAN Debian) and/or **remote** (S3-compatible, e.g. iDrive E2). Each can be enabled/disabled via env vars.
 
 ### What's backed up
 
@@ -505,25 +503,38 @@ Everything tracked by Git (recoverable from GitHub) and model files (redownloada
 ### Setup
 
 ```bash
-# 1. Install Restic
+# 1. Install restic
 sudo apt install restic
 
-# 2. Create password (or use passage)
-passage insert restic/librechat
+# 2. Create password file
+echo 'your-secure-password' | sudo tee /root/.restic/restic-password.txt
+sudo chmod 600 /root/.restic/restic-password.txt
+# Or use passage:
+# passage insert restic/librechat
 
 # 3. Copy environment template and edit
-cp scripts/restic-env.sh.template /root/.restic/restic-env.sh
-vim /root/.restic/restic-env.sh
+sudo mkdir -p /root/.restic
+sudo cp scripts/restic-env.sh.template /root/.restic/restic-env.sh
+sudo vim /root/.restic/restic-env.sh
 
 # 4. Initialize repositories
 restic -r /mnt/backup/librechat init
-restic -r sftp:user@storagebox:backups/librechat init
+restic -r s3:us-east-1.linodeobjects.com/librechat-backup init
 
 # 5. Copy cron file
 sudo cp scripts/restic-cron /etc/cron.d/restic-backup
 
 # 6. Test manually
 sudo /srv/ai-chat/scripts/backup.sh
+```
+
+### Toggling targets
+
+Edit `/root/.restic/restic-env.sh`:
+
+```bash
+export BACKUP_LOCAL=true   # set to false to skip local
+export BACKUP_REMOTE=true  # set to false to skip remote
 ```
 
 ### Files

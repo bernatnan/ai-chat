@@ -1,9 +1,26 @@
 # Restic environment variables
 # Copy to /root/.restic/restic-env.sh and fill in your values
+# Set BACKUP_LOCAL=false and/or BACKUP_REMOTE=false to disable a target
 
+# --- Toggles ---
+export BACKUP_LOCAL=true
+export BACKUP_REMOTE=true
+
+# --- Password ---
+# Plain file mode:
 export RESTIC_PASSWORD_FILE=/root/.restic/restic-password.txt
+# Or use passage (uncomment and remove PLAIN):
+# export RESTIC_PASSWORD=$(passage show restic/librechat)
+
+# --- Local repo ---
 export RESTIC_REPO_LOCAL=/mnt/backup/librechat
-export RESTIC_REPO_REMOTE=sftp:user@storagebox:backups/librechat
+
+# --- Remote repo (S3-compatible, e.g. iDrive E2) ---
+export RESTIC_REPO_REMOTE=s3:us-east-1.linodeobjects.com/librechat-backup
+export AWS_ACCESS_KEY_ID=your_access_key
+export AWS_SECRET_ACCESS_KEY=your_secret_key
+
+# --- Retention ---
 export RESTIC_KEEP_DAILY=7
 export RESTIC_KEEP_WEEKLY=4
 export RESTIC_KEEP_MONTHLY=6
