@@ -109,7 +109,7 @@ services:
     image: ghcr.io/clickhouse/librechat-admin-panel:latest
     restart: always
     ports:
-      - "${ADMIN_PANEL_PORT:-3000}:3000"
+      - "127.0.0.1:${ADMIN_PANEL_PORT:-3000}:3000"
     environment:
       - SESSION_SECRET=${ADMIN_PANEL_SESSION_SECRET}
       - VITE_API_BASE_URL=${DOMAIN_CLIENT}
