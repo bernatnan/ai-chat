@@ -31,7 +31,7 @@ services:
 
   mongodb:
     container_name: chat-mongodb
-    image: mongo:4.4
+    image: mongo:8.0.20
     restart: always
     volumes:
       - ./data-node:/data/db

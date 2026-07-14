@@ -455,7 +455,11 @@ git submodule update --init --recursive
 # See Backup section below for restic setup
 # scripts/restore.sh
 
-# 5. Start all services
+# 5. If restoring from a MongoDB 4.4 backup, migrate before starting:
+# scripts/migrate-mongodb.sh
+# Then follow the on-screen instructions (edit docker-compose.yml, mongorestore)
+
+# 6. Start all services
 docker compose up -d
 
 # 6. Create admin user
@@ -487,11 +491,15 @@ git submodule update --init --recursive
 scripts/restore.sh            # from remote (default)
 # scripts/restore.sh local    # from local repo instead
 
-# 4. Start all services
+# 4. If restoring from a MongoDB 4.4 backup, migrate before starting:
+# scripts/migrate-mongodb.sh
+# Then follow the on-screen instructions
+
+# 5. Start all services
 docker compose up -d
 ```
 
-A maximum of 3 steps: `git clone`, `scripts/restore.sh`, `docker compose up -d`.
+A maximum of 4 steps: `git clone`, `scripts/restore.sh`, `scripts/migrate-mongodb.sh`, `docker compose up -d`.
 
 ## Backup
 
@@ -554,6 +562,7 @@ See:
 - [`scripts/restore.sh`](scripts/restore.sh) — restore on a new server (3-step deploy)
 - [`scripts/restic-env.sh.template`](scripts/restic-env.sh.template) — environment config template
 - [`scripts/restic-exclude.txt`](scripts/restic-exclude.txt) — exclusion patterns (legacy)
+- [`scripts/migrate-mongodb.sh`](scripts/migrate-mongodb.sh) — migrate MongoDB 4.4 data to 8.0
 
 ## Updates
 
