@@ -398,13 +398,50 @@ python3 scripts/openwebui_to_librechat.py openwebui_export.json
 
 See [scripts/README.md](scripts/README.md) for more details.
 
+## Docker Installation (Debian)
+
+Official Docker repository, not the outdated Debian package.
+
+```bash
+# 1. Remove old Docker packages
+for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do
+  sudo apt remove -y "$pkg" 2>/dev/null || true
+done
+
+# 2. Install prerequisites
+sudo apt update
+sudo apt install -y ca-certificates curl
+
+# 3. Add Docker's official GPG key
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# 4. Add the repository
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# 5. Install Docker
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# 6. Add your user to the docker group
+sudo usermod -aG docker $USER
+newgrp docker
+
+# 7. Verify
+docker --version
+docker compose version
+docker run hello-world
+```
+
 ## Deploy on New Server
 
 Full deployment from scratch (e.g., after moving disks to new hardware).
 
 ```bash
-# 1. Prerequisites
-sudo apt install git docker docker-compose-v2
+# 1. Already done if you followed Docker Installation above
+sudo apt install git
 
 # 2. Clone the repository
 cd /srv
