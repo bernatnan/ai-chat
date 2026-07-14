@@ -63,12 +63,11 @@ echo "  -> Containers started!"
 echo "[5/6] Waiting for services to be ready..."
 sleep 15
 
-# Check if Ollama is running
-echo "[6/6] Checking Ollama status..."
-if docker exec ollama ollama list > /dev/null 2>&1; then
-    echo "  -> Ollama is ready!"
+echo "[6/6] Pulling Whisper STT model for LocalAI..."
+if docker exec localai sh -c 'curl -L -o /build/models/ggml-tiny.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin' 2>/dev/null; then
+    echo "  -> Whisper model downloaded!"
 else
-    echo "  -> Ollama is starting up (may take a moment)..."
+    echo "  -> Whisper model download skipped (will download on first request)"
 fi
 
 echo ""
@@ -82,16 +81,19 @@ echo "Next steps:"
 echo "  1. Create the first admin user:"
 echo "     docker compose exec api npm run create-user"
 echo ""
-echo "  2. Pull Ollama models (optional):"
+echo "  2. Test STT (speech-to-text):"
+echo "     Say something in the chat and try the microphone button"
+echo ""
+echo "  3. Pull Ollama models (optional):"
 echo "     docker exec -it ollama ollama pull llama3.2"
 echo "     docker exec -it ollama ollama pull qwen2.5"
 echo "     docker exec -it ollama ollama pull deepseek-r1"
 echo ""
-echo "  3. Configure Apache2 reverse proxy (see docs/apache2.conf.example)"
+echo "  4. Configure Apache2 reverse proxy (see docs/apache2.conf.example)"
 echo ""
-echo "  4. Enable Cloudflare Turnstile (edit librechat.yaml)"
+echo "  5. Enable Cloudflare Turnstile (edit librechat.yaml)"
 echo ""
-echo "  5. Test web search:"
+echo "  6. Test web search:"
 echo "     SearXNG is running at: http://localhost:8080"
 echo "     Make sure you've configured TAVILY_API_KEY and JINA_API_KEY in .env"
 echo ""

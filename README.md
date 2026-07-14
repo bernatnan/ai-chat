@@ -476,7 +476,11 @@ curl http://localhost:11434 # Ollama
 curl http://localhost:8180/readyz  # LocalAI
 curl http://localhost:8180/v1/models  # Should show whisper-1 and tts-1
 
-# 8. Set up backups
+# 8. Download Whisper STT model (if empty)
+docker exec localai sh -c 'curl -L -o /build/models/ggml-tiny.bin \
+  https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin'
+
+# 9. Set up backups
 # See Backup section below
 ```
 
@@ -503,6 +507,10 @@ scripts/restore.sh            # from remote (default)
 
 # 5. Start all services
 docker compose up -d
+
+# 6. Download Whisper STT model (if empty)
+docker exec localai sh -c 'curl -L -o /build/models/ggml-tiny.bin \
+  https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin'
 ```
 
 A maximum of 4 steps: `git clone`, `scripts/restore.sh`, `scripts/migrate-mongodb.sh`, `docker compose up -d`.
@@ -589,6 +597,15 @@ El contenidor LibreChat s'executa amb l'usuari `node` (UID 1000). Si Docker crea
 ```bash
 sudo chown -R 1000:1000 /srv/ai-chat/logs/
 docker compose restart api
+```
+
+### STT / whisper model not found (500 error)
+
+Si STT falla amb `stat /build/models/ggml-tiny.bin: no such file or directory`, descarrega el model manualment:
+
+```bash
+docker exec localai sh -c 'curl -L -o /build/models/ggml-tiny.bin \
+  https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin'
 ```
 
 ## Contributions
