@@ -460,6 +460,8 @@ git submodule update --init --recursive
 # Then follow the on-screen instructions (edit docker-compose.yml, mongorestore)
 
 # 6. Start all services
+# Nota: si el contenidor api no pot escriure a logs/ (EACCES), executa:
+#   sudo chown -R 1000:1000 /srv/ai-chat/logs/
 docker compose up -d
 
 # 6. Create admin user
@@ -572,6 +574,17 @@ git pull
 git submodule update --remote --merge
 docker compose pull
 docker compose up -d --build
+```
+
+## Troubleshooting
+
+### Permission denied (EACCES) a logs/
+
+El contenidor LibreChat s'executa amb l'usuari `node` (UID 1000). Si Docker crea el directori `logs/` com a `root`, l'escriptura falla:
+
+```bash
+sudo chown -R 1000:1000 /srv/ai-chat/logs/
+docker compose restart api
 ```
 
 ## Contributions
