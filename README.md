@@ -457,6 +457,8 @@ git submodule update --init --recursive
 
 # 5. If restoring from a MongoDB 4.4 backup, migrate before starting:
 # scripts/migrate-mongodb.sh
+#   or specify custom versions:
+#   scripts/migrate-mongodb.sh 4.4 8.0.20
 # Then follow the on-screen instructions (edit docker-compose.yml, mongorestore)
 
 # 6. Start all services
@@ -495,6 +497,8 @@ scripts/restore.sh            # from remote (default)
 
 # 4. If restoring from a MongoDB 4.4 backup, migrate before starting:
 # scripts/migrate-mongodb.sh
+#   or specify custom versions:
+#   scripts/migrate-mongodb.sh 4.4 8.0.20
 # Then follow the on-screen instructions
 
 # 5. Start all services
