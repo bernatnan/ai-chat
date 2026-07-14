@@ -17,12 +17,6 @@ source /root/.restic/restic-env.sh
 BASE=/srv/ai-chat
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 LOG_FILE="$BASE/logs/backup-$TIMESTAMP.log"
-BACKUP_PATHS=(
-  ".env"
-  "librechat.yaml"
-  "uploads"
-  "images"
-)
 
 mkdir -p "$BASE/logs"
 
@@ -49,18 +43,15 @@ run_for_repos() {
 echo "[$(date)] Stopping MongoDB..."
 docker stop chat-mongodb 2>/dev/null || echo "[$(date)] MongoDB not running, skipping stop"
 
-# 2. Backup MongoDB data directory
-echo "[$(date)] Backing up MongoDB data..."
+# 2. Backup everything in one snapshot (MongoDB + non-versioned files)
+echo "[$(date)] Backing up all non-versioned files..."
 cd "$BASE"
-run_for_repos "mongodb" backup "data-node"
+run_for_repos "backup" backup \
+  "data-node" ".env" "librechat.yaml" "uploads" "images"
 
 # 3. Restart MongoDB
 echo "[$(date)] Starting MongoDB..."
 docker start chat-mongodb 2>/dev/null || echo "[$(date)] MongoDB not found, skipping start"
-
-# 4. Backup non-versioned files
-echo "[$(date)] Backing up non-versioned files..."
-run_for_repos "project" backup "${BACKUP_PATHS[@]}"
 
 # 5. Apply retention policy
 echo "[$(date)] Applying retention..."
