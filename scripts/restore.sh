@@ -48,7 +48,7 @@ restic -r "$REPO" restore "$SNAPSHOT" --target "$RESTORE_TARGET"
 
 # 3. Copy files to destination (clean replace)
 echo "[$(date)] Copying files to $BASE..."
-mkdir -p "$BASE"
+mkdir -p "$BASE/data-node" "$BASE/uploads" "$BASE/images" "$BASE/logs"
 for item in .env librechat.yaml data-node uploads images; do
   src="$RESTORE_TARGET/$item"
   if [ -e "$src" ]; then
