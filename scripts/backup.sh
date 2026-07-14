@@ -2,31 +2,44 @@
 set -euo pipefail
 
 # Restic backup script for LibreChat stack
-# Backups MongoDB (data-node/) + all non-git files to local and/or remote repos
+# Backups only non-versioned files (see table below) to local and/or remote repos
 # Configure targets in /root/.restic/restic-env.sh
+#
+# Backed up:
+#   /srv/ai-chat/.env           - Environment secrets
+#   /srv/ai-chat/librechat.yaml - Local LibreChat config
+#   /srv/ai-chat/data-node/     - MongoDB database
+#   /srv/ai-chat/uploads/       - User uploaded files
+#   /srv/ai-chat/images/        - Generated images
 
 source /root/.restic/restic-env.sh
 
 BASE=/srv/ai-chat
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 LOG_FILE="$BASE/logs/backup-$TIMESTAMP.log"
+BACKUP_PATHS=(
+  "$BASE/.env"
+  "$BASE/librechat.yaml"
+  "$BASE/uploads"
+  "$BASE/images"
+)
 
-mkdir -p "$BASE/tmp" "$BASE/logs"
+mkdir -p "$BASE/logs"
 
-exec >"$LOG_FILE" 2>&1
+exec > >(tee -a "$LOG_FILE") 2>&1
 
 echo "[$(date)] Starting backup"
-echo "[$(date)] Targets: local=$BACKUP_LOCAL remote=$BACKUP_REMOTE"
+echo "[$(date)] Targets: local=${BACKUP_LOCAL:-false} remote=${BACKUP_REMOTE:-false}"
 
-# Helper function: run a command for each enabled repo
+# Helper: run a command for each enabled repo
 run_for_repos() {
   local label="$1"
   shift
-  if [ "$BACKUP_LOCAL" = true ]; then
+  if [ "${BACKUP_LOCAL:-false}" = true ]; then
     echo "[$(date)] $label → local"
     restic -r "$RESTIC_REPO_LOCAL" "$@"
   fi
-  if [ "$BACKUP_REMOTE" = true ]; then
+  if [ "${BACKUP_REMOTE:-false}" = true ]; then
     echo "[$(date)] $label → remote"
     restic -r "$RESTIC_REPO_REMOTE" "$@"
   fi
@@ -34,7 +47,7 @@ run_for_repos() {
 
 # 1. Stop MongoDB for consistent dump
 echo "[$(date)] Stopping MongoDB..."
-docker stop chat-mongodb
+docker stop chat-mongodb 2>/dev/null || echo "[$(date)] MongoDB not running, skipping stop"
 
 # 2. Backup MongoDB data directory
 echo "[$(date)] Backing up MongoDB data..."
@@ -42,28 +55,22 @@ run_for_repos "mongodb" backup "$BASE/data-node"
 
 # 3. Restart MongoDB
 echo "[$(date)] Starting MongoDB..."
-docker start chat-mongodb
+docker start chat-mongodb 2>/dev/null || echo "[$(date)] MongoDB not found, skipping start"
 
-# 4. Backup everything else (excluding MongoDB, git, models)
-echo "[$(date)] Backing up project files..."
-run_for_repos "project" backup \
-  --exclude-file="$BASE/scripts/restic-exclude.txt" \
-  --exclude="data-node" \
-  "$BASE"
+# 4. Backup non-versioned files
+echo "[$(date)] Backing up non-versioned files..."
+run_for_repos "project" backup "${BACKUP_PATHS[@]}"
 
-# 5. Clean up
-rm -rf "$BASE/tmp"
-
-# 6. Apply retention policy
+# 5. Apply retention policy
 echo "[$(date)] Applying retention..."
 run_for_repos "forget" forget \
-  --keep-daily "$RESTIC_KEEP_DAILY" \
-  --keep-weekly "$RESTIC_KEEP_WEEKLY" \
-  --keep-monthly "$RESTIC_KEEP_MONTHLY" \
+  --keep-daily "${RESTIC_KEEP_DAILY:-7}" \
+  --keep-weekly "${RESTIC_KEEP_WEEKLY:-4}" \
+  --keep-monthly "${RESTIC_KEEP_MONTHLY:-6}" \
   --prune
 
-# 7. Verify local repo integrity (partial)
-if [ "$BACKUP_LOCAL" = true ]; then
+# 6. Verify local repo integrity (partial)
+if [ "${BACKUP_LOCAL:-false}" = true ]; then
   echo "[$(date)] Verifying local repo..."
   restic -r "$RESTIC_REPO_LOCAL" check --read-data-subset=5%
 fi

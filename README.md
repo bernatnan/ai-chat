@@ -414,72 +414,47 @@ cd ai-chat
 # 3. Init submodules
 git submodule update --init --recursive
 
-# 4. Create .env from template with generated secrets
-cp .env.template .env
-# Manually add: API keys for Qwen/DeepSeek/Anthropic/Zhipu/Tavily/Jina/OpenRouter
-# vim .env
+# 4. Restore non-versioned files (optional, if migrating from existing server)
+# See Backup section below for restic setup
+# scripts/restore.sh
 
-# 5. Copy local LibreChat config (gitignored)
-cp librechat.yaml.local librechat.yaml
-
-# 6. Verify CPU supports required instructions
-grep -E 'avx|avx2|sse4_2' /proc/cpuinfo
-
-# 7. Start all services
+# 5. Start all services
 docker compose up -d
 
-# 8. Create admin user
+# 6. Create admin user
 docker compose exec api npm run create-user
 
-# 9. Verify health
+# 7. Verify health
 curl http://localhost:3080
 curl http://localhost:8080  # SearXNG
 curl http://localhost:11434 # Ollama
 curl http://localhost:8180/readyz  # LocalAI
 curl http://localhost:8180/v1/models  # Should show whisper-1 and tts-1
 
-# 10. Set up backups
+# 8. Set up backups
 # See Backup section below
 ```
 
-### Migrating from existing volume
-
-If moving from another server:
+### Restoring from backup (migrating or recovery)
 
 ```bash
-# 1. Stop services on old server
-docker compose down
+# 1. Clone and init submodules
+git clone https://github.com/bernatnan/ai-chat.git /srv/ai-chat
+cd /srv/ai-chat
+git submodule update --init --recursive
 
-# 2. Copy persistent data
-rsync -avz --progress /srv/ai-chat/data-node/ user@new-server:/srv/ai-chat/data-node/
-rsync -avz --progress /srv/ai-chat/uploads/ user@new-server:/srv/ai-chat/uploads/
-rsync -avz --progress /srv/ai-chat/images/ user@new-server:/srv/ai-chat/images/
-rsync -avz --progress /srv/ai-chat/.env user@new-server:/srv/ai-chat/.env
-rsync -avz --progress /srv/ai-chat/librechat.yaml user@new-server:/srv/ai-chat/librechat.yaml
-
-# 3. On new server, start with existing data
-docker compose up -d
-```
-
-### Restoring from Restic backup
-
-```bash
-# 1. Install restic and set up environment
+# 2. Install restic and set up environment
 # See Backup section below for setup
 
-# 2. Restore MongoDB
-restic -r /mnt/backup/librechat restore latest --target /tmp/restore
-cp -a /tmp/restore/srv/ai-chat/data-node/* /srv/ai-chat/data-node/
+# 3. Restore non-versioned files (data-node, uploads, images, .env, librechat.yaml)
+scripts/restore.sh            # from remote (default)
+# scripts/restore.sh local    # from local repo instead
 
-# 3. Restore project files
-restic -r /mnt/backup/librechat restore latest \
-  --target /tmp/restore \
-  --exclude="data-node"
-cp -a /tmp/restore/srv/ai-chat/* /srv/ai-chat/
-
-# 4. Start services
+# 4. Start all services
 docker compose up -d
 ```
+
+A maximum of 3 steps: `git clone`, `scripts/restore.sh`, `docker compose up -d`.
 
 ## Backup
 
@@ -495,10 +470,7 @@ Daily encrypted backups using [Restic](https://restic.net/). Supports two indepe
 | `.env` | Environment secrets | API keys, tokens |
 | `librechat.yaml` | Local LibreChat config | Gitignored, not in repo |
 
-### What's excluded
-
-Everything tracked by Git (recoverable from GitHub) and model files (redownloadable):
-`ollama_data/`, `localai_models/`, `searxng_data/`, `valkey_data/`, `pgdata/`, `meili_data/`, `logs/`, `tmp/`, `node_modules/`
+No versionats — només els fitxers que **no** estan a Git. La resta es recupera amb `git clone`.
 
 ### Setup
 
@@ -540,7 +512,11 @@ export BACKUP_REMOTE=true  # set to false to skip remote
 
 ### Files
 
-See [`scripts/backup.sh`](scripts/backup.sh), [`scripts/restic-exclude.txt`](scripts/restic-exclude.txt), and [`scripts/restic-env.sh.template`](scripts/restic-env.sh.template).
+See:
+- [`scripts/backup.sh`](scripts/backup.sh) — backup only non-versioned files
+- [`scripts/restore.sh`](scripts/restore.sh) — restore on a new server (3-step deploy)
+- [`scripts/restic-env.sh.template`](scripts/restic-env.sh.template) — environment config template
+- [`scripts/restic-exclude.txt`](scripts/restic-exclude.txt) — exclusion patterns (legacy)
 
 ## Updates
 
