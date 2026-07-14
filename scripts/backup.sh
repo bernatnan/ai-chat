@@ -18,10 +18,10 @@ BASE=/srv/ai-chat
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 LOG_FILE="$BASE/logs/backup-$TIMESTAMP.log"
 BACKUP_PATHS=(
-  "$BASE/.env"
-  "$BASE/librechat.yaml"
-  "$BASE/uploads"
-  "$BASE/images"
+  ".env"
+  "librechat.yaml"
+  "uploads"
+  "images"
 )
 
 mkdir -p "$BASE/logs"
@@ -51,7 +51,8 @@ docker stop chat-mongodb 2>/dev/null || echo "[$(date)] MongoDB not running, ski
 
 # 2. Backup MongoDB data directory
 echo "[$(date)] Backing up MongoDB data..."
-run_for_repos "mongodb" backup "$BASE/data-node"
+cd "$BASE"
+run_for_repos "mongodb" backup "data-node"
 
 # 3. Restart MongoDB
 echo "[$(date)] Starting MongoDB..."
@@ -59,6 +60,7 @@ docker start chat-mongodb 2>/dev/null || echo "[$(date)] MongoDB not found, skip
 
 # 4. Backup non-versioned files
 echo "[$(date)] Backing up non-versioned files..."
+cd "$BASE"
 run_for_repos "project" backup "${BACKUP_PATHS[@]}"
 
 # 5. Apply retention policy
