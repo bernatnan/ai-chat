@@ -46,16 +46,14 @@ echo "[$(date)] Restoring files to $RESTORE_TARGET..."
 rm -rf "$RESTORE_TARGET"
 restic -r "$REPO" restore "$SNAPSHOT" --target "$RESTORE_TARGET"
 
-# 3. Copy files to destination
+# 3. Copy files to destination (clean replace)
 echo "[$(date)] Copying files to $BASE..."
-mkdir -p "$BASE" "$BASE/uploads" "$BASE/images" "$BASE/data-node" "$BASE/logs"
+mkdir -p "$BASE"
 for item in .env librechat.yaml data-node uploads images; do
-  # Try relative path (new backup format since commit 4106f2f)
   src="$RESTORE_TARGET/$item"
-  # Fall back to absolute path (old backup format)
-  [ ! -e "$src" ] && src="$RESTORE_TARGET/srv/ai-chat/$item"
   if [ -e "$src" ]; then
     echo "  → $item"
+    rm -rf "$BASE/$item"
     cp -a "$src" "$BASE/"
   fi
 done
