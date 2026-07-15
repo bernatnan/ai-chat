@@ -26,6 +26,7 @@ services:
       - ./librechat.yaml:/app/librechat.yaml
       - ./images:/app/client/public/images
       - ./uploads:/app/uploads
+      - ./generated_files:/app/generated_files
       - ./logs:/app/logs
       - ./skill:/app/skill
 
