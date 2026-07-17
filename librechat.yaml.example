@@ -238,7 +238,7 @@ mcpServers:
     args:
       - '/app/mcp-servers/document-generator/index.js'
     env:
-      DOCUMENTS_PATH: '/app/client/public/images/documents'
+      DOCUMENTS_PATH: '/app/generated_files'
       DOCUMENTS_BASE_URL: '${DOMAIN_CLIENT}'
     timeout: 120000
 

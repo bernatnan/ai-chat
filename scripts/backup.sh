@@ -47,7 +47,7 @@ docker stop chat-mongodb 2>/dev/null || echo "[$(date)] MongoDB not running, ski
 echo "[$(date)] Backing up all non-versioned files..."
 cd "$BASE"
 run_for_repos "backup" backup \
-  "data-node" ".env" "librechat.yaml" "uploads" "images"
+  "data-node" ".env" "librechat.yaml" "uploads" "images" "generated_files"
 
 # 3. Restart MongoDB
 echo "[$(date)] Starting MongoDB..."

@@ -12,6 +12,7 @@ services:
       - searxng
       - localai
     restart: always
+    env_file: .env
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
@@ -25,7 +26,10 @@ services:
       - ./.env:/app/.env
       - ./librechat.yaml:/app/librechat.yaml
       - ./images:/app/client/public/images
+      - ./assets:/app/client/public/assets
+      - ./assets:/app/client/dist/assets
       - ./uploads:/app/uploads
+      - ./generated_files:/app/generated_files
       - ./logs:/app/logs
       - ./skill:/app/skill
 

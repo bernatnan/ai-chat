@@ -51,7 +51,7 @@ echo "  -> Done!"
 
 # Create necessary directories
 echo "[3/6] Creating directories..."
-mkdir -p data-node meili_data uploads logs images skill
+mkdir -p data-node meili_data uploads logs images skill generated_files assets
 echo "  -> Done!"
 
 # Build and start containers

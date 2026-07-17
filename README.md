@@ -8,6 +8,7 @@ Self-hosted AI chat platform built on [LibreChat](https://github.com/danny-avila
 - **Integrated web search**: SearXNG (local) + Tavily (scraper) + Jina (reranker)
 - **Image generation**: Qwen Image 2.0 Pro via MCP server
 - **Document generation**: Create PDF and Markdown documents from text, markdown, or HTML via MCP server
+- **Generated Files Manager**: All generated documents and images are automatically indexed and accessible from a dedicated **Generated Files** view (Files → Generated tab). Files are served via the API with per-user access control.
 - **Local models**: Ollama with GPU (NVIDIA) or CPU support
 - **Admin Panel**: User, group, role, and configuration management from the browser
 - **User management**: Admin-only registration, roles, and granular permissions
