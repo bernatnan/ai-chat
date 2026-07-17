@@ -12,6 +12,7 @@ services:
       - searxng
       - localai
     restart: always
+    env_file: .env
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
