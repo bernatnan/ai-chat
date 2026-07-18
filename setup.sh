@@ -18,6 +18,7 @@ if [ ! -f .env ]; then
     MEILI_KEY=$(openssl rand -hex 32)
     SEARXNG_SECRET=$(openssl rand -hex 32)
     ADMIN_PANEL_SECRET=$(openssl rand -hex 32)
+    OPENID_SESSION_SECRET=$(openssl rand -hex 32)
 
     # Replace placeholders
     sed -i "s/GENERATE_JWT_SECRET/$JWT_SECRET/" .env
@@ -27,6 +28,7 @@ if [ ! -f .env ]; then
     sed -i "s/GENERATE_MEILI_KEY/$MEILI_KEY/" .env
     sed -i "s/GENERATE_SEARXNG_SECRET/$SEARXNG_SECRET/" .env
     sed -i "s/GENERATE_ADMIN_PANEL_SECRET/$ADMIN_PANEL_SECRET/" .env
+    sed -i "s/GENERATE_OPENID_SESSION_SECRET/$OPENID_SESSION_SECRET/" .env
 
     echo "  -> Secrets generated!"
     echo ""
@@ -35,6 +37,7 @@ if [ ! -f .env ]; then
     echo "    - API keys for Qwen, DeepSeek, Anthropic, Zhipu AI"
     echo "    - TAVILY_API_KEY (web search scraper - https://tavily.com)"
     echo "    - JINA_API_KEY (web search reranker - https://jina.ai/api-dashboard/)"
+    echo "    - OpenID vars are dummy placeholders (required by admin panel)"
     echo "    - SMTP settings (optional)"
     echo ""
     echo "  Run: nano .env"
