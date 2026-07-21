@@ -589,6 +589,43 @@ docker compose pull
 docker compose up -d --build
 ```
 
+## Updating LibreChat fork
+
+LibreChat is a git submodule pointing to `bernatnan/LibreChat` (fork of `danny-avila/LibreChat`). To apply upstream changes:
+
+### 1. Merge upstream into your fork (on GitHub or locally)
+
+```bash
+cd librechat
+git remote add upstream https://github.com/danny-avila/LibreChat.git  # once
+git fetch upstream
+git checkout main
+git merge upstream/main
+# Resolve any conflicts, then:
+git push origin main
+```
+
+### 2. Update the submodule pointer in this repo
+
+```bash
+cd ..
+git add librechat
+git commit -m "chore: update LibreChat submodule to latest upstream"
+git push origin main
+```
+
+### 3. Apply to production server
+
+```bash
+cd /srv/ai-chat
+git pull
+git submodule update --init --recursive
+nohup docker compose up -d --build > /tmp/build.log 2>&1 &
+tail -f /tmp/build.log
+```
+
+> **Tip:** Use `nohup` for the build — it can take 10-15 minutes and an SSH disconnect would kill it otherwise.
+
 ## Troubleshooting
 
 ### Permission denied (EACCES) a logs/
