@@ -26,12 +26,13 @@ services:
       - ./.env:/app/.env
       - ./librechat.yaml:/app/librechat.yaml
       - ./images:/app/client/public/images
-      - ./assets:/app/client/public/assets
-      - ./assets:/app/client/dist/assets
+      - ./assets:/app/assets-custom
+      - ./scripts/docker-entrypoint.sh:/app/docker-entrypoint.sh:ro
       - ./uploads:/app/uploads
       - ./generated_files:/app/generated_files
       - ./logs:/app/logs
       - ./skill:/app/skill
+    command: ["/app/docker-entrypoint.sh"]
 
   mongodb:
     container_name: chat-mongodb
