@@ -37,6 +37,7 @@ interface:
   marketplace:
     use: false
   fileCitations: true
+  webSearch: true
 
 # Cloudflare Turnstile
 # IMPORTANT: Replace YOUR_SITE_KEY with your real Cloudflare Turnstile site key
