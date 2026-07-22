@@ -75,6 +75,20 @@ else
 fi
 
 echo ""
+echo "Downloading Piper TTS model (ca_ES-upc_ona-medium)..."
+if docker exec localai sh -c 'curl -L -o /build/models/ca_ES-upc_ona-medium.onnx https://huggingface.co/rhasspy/piper-voices/resolve/main/ca/es/upc_ona/medium/ca_ES-upc_ona-medium.onnx' 2>/dev/null; then
+    echo "  -> Piper TTS model downloaded!"
+else
+    echo "  -> Piper TTS model download skipped (will download on first request)"
+fi
+
+if docker exec localai sh -c 'curl -L -o /build/models/ca_ES-upc_ona-medium.onnx.json https://huggingface.co/rhasspy/piper-voices/resolve/main/ca/es/upc_ona/medium/ca_ES-upc_ona-medium.onnx.json' 2>/dev/null; then
+    echo "  -> Piper TTS config downloaded!"
+else
+    echo "  -> Piper TTS config download skipped"
+fi
+
+echo ""
 echo "========================================="
 echo "  Setup Complete!"
 echo "========================================="
@@ -85,23 +99,20 @@ echo "Next steps:"
 echo "  1. Create the first admin user:"
 echo "     docker compose exec api npm run create-user"
 echo ""
-echo "  2. Download the Whisper STT model (required once):"
-echo "     docker exec localai sh -c 'curl -L -o /build/models/ggml-tiny.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin'"
-echo ""
-echo "  3. Test STT (speech-to-text):"
+echo "  2. Test STT/TTS (speech-to-text and text-to-speech):"
 echo "     Say something in the chat and try the microphone button"
-echo "     Note: Piper TTS voices are downloaded automatically on first use"
+echo "     Note: Models are downloaded automatically during setup"
 echo ""
-echo "  4. Pull Ollama models (optional):"
+echo "  3. Pull Ollama models (optional):"
 echo "     docker exec -it ollama ollama pull llama3.2"
 echo "     docker exec -it ollama ollama pull qwen2.5"
 echo "     docker exec -it ollama ollama pull deepseek-r1"
 echo ""
-echo "  5. Configure Apache2 reverse proxy (see docs/apache2.conf.example)"
+echo "  4. Configure Apache2 reverse proxy (see docs/apache2.conf.example)"
 echo ""
-echo "  6. Enable Cloudflare Turnstile (edit librechat.yaml)"
+echo "  5. Enable Cloudflare Turnstile (edit librechat.yaml)"
 echo ""
-echo "  7. Test web search:"
+echo "  6. Test web search:"
 echo "     SearXNG is running at: http://localhost:8080"
 echo "     Make sure you've configured TAVILY_API_KEY and JINA_API_KEY in .env"
 echo ""

@@ -59,7 +59,7 @@ speech:
     localai:
       url: 'http://localai:8080/v1/audio/speech'
       apiKey: ''
-      model: 'tts-1'
+      model: 'ca_ES-upc_ona-medium.onnx'
       backend: 'piper'
       voices:
         - 'ca_ES-upc_ona-medium'
