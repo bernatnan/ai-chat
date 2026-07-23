@@ -18,7 +18,6 @@ librechat.yaml.admin
 librechat.yaml.standard
 librechat.yaml.basic
 librechat.yaml.bernat
-librechat.test.yaml
 
 # Docker volumes
 pgdata/
