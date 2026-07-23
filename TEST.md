@@ -57,8 +57,10 @@ docker compose -f docker-compose.test.yml logs -f api
 ### 5. Stop services
 
 ```bash
-docker compose -f docker-compose.test.yml down
+docker compose -f docker-compose.test.yml down -v  # -v removes volumes (clean reset)
 ```
+
+> **Important:** Use `-v` flag to remove volumes for a clean reset. Without `-v`, MongoDB and Meilisearch data persist.
 
 ## Troubleshooting
 
