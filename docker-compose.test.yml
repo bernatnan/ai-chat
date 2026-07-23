@@ -25,7 +25,7 @@ services:
       - NO_PROXY=${NO_PROXY:-localhost,127.0.0.1,::1},mongodb,meilisearch,rag_api,vectordb,host.docker.internal,ollama,searxng,valkey,localai
     volumes:
       - ./.env.test:/app/.env
-      - ./librechat.yaml:/app/librechat.yaml
+      - ./librechat.test.yaml:/app/librechat.yaml
       - ./images:/app/client/public/images
       - ./uploads:/app/uploads
       - ./logs:/app/logs
