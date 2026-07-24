@@ -18,7 +18,18 @@ nano .env.test.local
 - `MEILI_MASTER_KEY` - any random string
 - `ADMIN_PANEL_SESSION_SECRET` - any random string
 - `SEARXNG_SECRET` - any random string
-- API keys for providers you want to test (TAVILY_API_KEY, JINA_API_KEY, etc.)
+
+**API Keys:**
+Put your API keys directly in `librechat.test.yaml` (not in `.env.test.local`):
+```yaml
+webSearch:
+  searchProvider: searxng
+  searxngInstanceUrl: 'http://searxng:8080'
+  scraperProvider: tavily
+  tavilyApiKey: 'tvly-xxxxx'  # Your real key
+  rerankerType: jina
+  jinaApiKey: 'jina-xxxxx'    # Your real key
+```
 
 ### 2. Start services
 
