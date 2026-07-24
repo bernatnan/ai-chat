@@ -9,6 +9,7 @@ images/
 .env
 .env.local
 .env.production
+.env.test.local
 CONTEXT.md
 
 # LibreChat config (contains secrets)
@@ -17,6 +18,7 @@ librechat.yaml.local
 librechat.yaml.admin
 librechat.yaml.standard
 librechat.yaml.basic
+librechat.test.yaml
 
 # Docker volumes
 pgdata/
