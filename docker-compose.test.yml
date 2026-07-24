@@ -13,7 +13,7 @@ services:
       - searxng
       - localai
     restart: always
-    env_file: .env.test
+    env_file: .env.test.local
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
@@ -24,7 +24,7 @@ services:
       - RAG_API_URL=http://rag_api:${RAG_PORT:-8000}
       - NO_PROXY=${NO_PROXY:-localhost,127.0.0.1,::1},mongodb,meilisearch,rag_api,vectordb,host.docker.internal,ollama,searxng,valkey,localai
     volumes:
-      - ./.env.test:/app/.env
+      - ./.env.test.local:/app/.env
       - ./librechat.test.yaml:/app/librechat.yaml
       - ./images:/app/client/public/images
       - ./uploads:/app/uploads
@@ -71,7 +71,7 @@ services:
     depends_on:
       - vectordb
     env_file:
-      - .env.test
+      - .env.test.local
 
   ollama:
     container_name: ollama
