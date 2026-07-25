@@ -96,7 +96,7 @@ endpoints:
   agents:
     recursionLimit: 25
     maxRecursionLimit: 50
-    capabilities: ["file_search", "actions", "tools"]
+    capabilities: ["file_search", "web_search", "actions", "tools"]
 
   custom:
     # Anthropic (Claude)
