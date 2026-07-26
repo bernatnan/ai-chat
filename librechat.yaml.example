@@ -224,11 +224,20 @@ endpoints:
 
 # MCP Servers
 mcpServers:
-  qwen-image:
+  image:
     type: stdio
     command: node
     args:
-      - '/app/mcp-servers/qwen-image/index.js'
+      - '/app/mcp-servers/image/index.js'
+    env:
+      DASHSCOPE_API_KEY: '${QWEN_API_KEY}'
+    timeout: 120000
+
+  image-edit:
+    type: stdio
+    command: node
+    args:
+      - '/app/mcp-servers/image-edit/index.js'
     env:
       DASHSCOPE_API_KEY: '${QWEN_API_KEY}'
     timeout: 120000
