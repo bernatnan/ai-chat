@@ -241,6 +241,7 @@ mcpServers:
       - '/app/mcp-servers/image-edit/index.js'
     env:
       DASHSCOPE_API_KEY: '${QWEN_API_KEY}'
+      IMAGES_PATH: '/app/generated_files/'
     timeout: 120000
 
   document-generator:
