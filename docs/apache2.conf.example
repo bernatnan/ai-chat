@@ -59,17 +59,8 @@
     RemoteIPInternalProxy 172.64.0.0/13
     RemoteIPInternalProxy 131.0.72.0/22
 
-    # Serve generated files directly (for MCP document/image generation)
-    Alias /generated_files /srv/ai-chat/generated_files
-    <Directory /srv/ai-chat/generated_files>
-        Options -Indexes
-        Require all granted
-        Header set Content-Disposition "attachment"
-    </Directory>
-
     # Proxy Configuration
     ProxyPreserveHost On
-    ProxyPass /generated_files !
     ProxyPass / http://localhost:3080/ flushpackets=on
     ProxyPassReverse / http://localhost:3080/
 

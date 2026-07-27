@@ -16,4 +16,9 @@ if [ -d /app/assets-custom ] && [ -d /app/client/dist/assets ]; then
 fi
 
 echo "Starting LibreChat server..."
+
+# Make generated files accessible via Express static middleware
+rm -rf /app/client/dist/generated_files 2>/dev/null || true
+ln -sf /app/generated_files /app/client/dist/generated_files
+
 exec node api/server/index.js
