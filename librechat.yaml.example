@@ -242,7 +242,6 @@ mcpServers:
     env:
       DASHSCOPE_API_KEY: '${QWEN_API_KEY}'
       IMAGES_PATH: '/app/generated_files/'
-      IMAGES_BASE_URL: '${DOMAIN_CLIENT}'
     timeout: 120000
 
   document-generator:
