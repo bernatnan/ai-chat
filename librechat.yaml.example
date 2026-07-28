@@ -244,6 +244,25 @@ mcpServers:
       IMAGES_PATH: '/app/generated_files/'
     timeout: 120000
 
+  image-openrouter:
+    type: stdio
+    command: node
+    args:
+      - '/app/mcp-servers/image-openrouter/index.js'
+    env:
+      OPENROUTER_KEY: '${OPENROUTER_KEY}'
+      IMAGES_PATH: '/app/generated_files/'
+    timeout: 120000
+
+  video-openrouter:
+    type: stdio
+    command: node
+    args:
+      - '/app/mcp-servers/video-openrouter/index.js'
+    env:
+      OPENROUTER_KEY: '${OPENROUTER_KEY}'
+    timeout: 300000
+
   document-generator:
     type: stdio
     command: node
