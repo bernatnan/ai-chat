@@ -234,16 +234,6 @@ mcpServers:
       IMAGES_PATH: '/app/generated_files/'
     timeout: 120000
 
-  image-edit:
-    type: stdio
-    command: node
-    args:
-      - '/app/mcp-servers/image-edit/index.js'
-    env:
-      DASHSCOPE_API_KEY: '${QWEN_API_KEY}'
-      IMAGES_PATH: '/app/generated_files/'
-    timeout: 120000
-
   image-openrouter:
     type: stdio
     command: node
@@ -253,6 +243,15 @@ mcpServers:
       OPENROUTER_KEY: '${OPENROUTER_KEY}'
       IMAGES_PATH: '/app/generated_files/'
     timeout: 120000
+
+  video:
+    type: stdio
+    command: node
+    args:
+      - '/app/mcp-servers/video/index.js'
+    env:
+      DASHSCOPE_API_KEY: '${QWEN_API_KEY}'
+    timeout: 600000
 
   video-openrouter:
     type: stdio
