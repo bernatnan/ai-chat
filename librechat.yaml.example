@@ -272,6 +272,17 @@ mcpServers:
       DOCUMENTS_BASE_URL: '${DOMAIN_CLIENT}'
     timeout: 120000
 
+  file-reader:
+    type: stdio
+    command: node
+    args:
+      - '/app/mcp-servers/file-reader/index.js'
+    env:
+      UPLOADS_ROOT: '/app/uploads'
+      IMAGES_ROOT: '/app/client/public/images'
+      GENERATED_ROOT: '/app/generated_files'
+    timeout: 120000
+
 actions:
   allowedDomains:
     - 'api.anthropic.com'
