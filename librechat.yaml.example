@@ -134,9 +134,11 @@ endpoints:
       modelDisplayLabel: 'OpenAI'
 
     # Qwen / DashScope (Alibaba Cloud)
+    # baseURL: use the token-plan URL for subscription plans, or dashscope-intl for pay-as-you-go
     - name: 'Qwen'
       apiKey: '${QWEN_API_KEY}'
-      baseURL: 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1'
+      baseURL: 'https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1'
+      # baseURL: 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1'
       models:
         default:
           - 'qwen-max'
@@ -231,6 +233,8 @@ mcpServers:
       - '/app/mcp-servers/image/index.js'
     env:
       DASHSCOPE_API_KEY: '${QWEN_API_KEY}'
+      DASHSCOPE_BASE_URL: 'https://token-plan.ap-southeast-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation'
+      # DASHSCOPE_BASE_URL: 'https://dashscope-intl.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation'
       IMAGES_PATH: '/app/generated_files/'
     timeout: 120000
 
@@ -251,6 +255,8 @@ mcpServers:
       - '/app/mcp-servers/video/index.js'
     env:
       DASHSCOPE_API_KEY: '${QWEN_API_KEY}'
+      DASHSCOPE_BASE_URL: 'https://token-plan.ap-southeast-1.maas.aliyuncs.com/api/v1/services/aigc/video-generation/generation'
+      # DASHSCOPE_BASE_URL: 'https://dashscope-intl.aliyuncs.com/api/v1/services/aigc/video-generation/generation'
     timeout: 600000
 
   video-openrouter:
