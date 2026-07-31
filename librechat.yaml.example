@@ -133,10 +133,9 @@ endpoints:
       titleModel: 'gpt-3.5-turbo'
       modelDisplayLabel: 'OpenAI'
 
-    # Qwen / DashScope (Alibaba Cloud)
-    # Token Plan models (subscription):
-    - name: 'Qwen'
-      apiKey: '${QWEN_API_KEY}'
+    # QwenCloud Token Plan / DashScope (Alibaba Cloud) - All models
+    - name: 'QwenCloud'
+      apiKey: '${QWENCLOUD_KEY}'
       baseURL: 'https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1'
       # baseURL: 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1'
       models:
@@ -146,31 +145,31 @@ endpoints:
           - 'qwen3.7-plus'
           - 'qwen3.6-plus'
           - 'qwen3.6-flash'
+          - 'deepseek-v4-pro'
+          - 'deepseek-v4-flash'
+          - 'deepseek-v3.2'
+          - 'kimi-k2.7-code'
+          - 'kimi-k2.6'
+          - 'glm-5.2'
+          - 'MiniMax-M2.5'
         fetch: false
       titleConvo: true
       titleModel: 'qwen3.6-flash'
-      modelDisplayLabel: 'Qwen'
+      modelDisplayLabel: 'QwenCloud'
       dropParams: ['stop', 'user', 'frequency_penalty', 'presence_penalty']
 
-    # Pay-as-you-go models:
-    # - name: 'Qwen'
-    #   apiKey: '${QWEN_API_KEY}'
-    #   baseURL: 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1'
-    #   models:
-    #     default:
-    #       - 'qwen-max'
-    #       - 'qwen-plus'
-    #       - 'qwen-turbo'
-    #       - 'qwen-long'
-    #       - 'qwen-coder-plus'
-    #       - 'qwen-coder-turbo'
-    #       - 'qwen-vl-max'
-    #       - 'qwen-vl-plus'
-    #     fetch: true
-    #   titleConvo: true
-    #   titleModel: 'qwen-turbo'
-    #   modelDisplayLabel: 'Qwen'
-    #   dropParams: ['stop', 'user', 'frequency_penalty', 'presence_penalty']
+    # QwenCloud Pay-As-You-Go / DashScope (Alibaba Cloud) - All models
+    - name: 'Qwen'
+      apiKey: '${QWEN_API_KEY}'
+      baseURL: 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1'
+      models:
+        default:
+          - 'qwen3.7-flash'
+        fetch: false
+      titleConvo: true
+      titleModel: 'qwen3-7-flash'
+      modelDisplayLabel: 'Qwen'
+      dropParams: ['stop', 'user', 'frequency_penalty', 'presence_penalty']
 
     # DeepSeek
     - name: 'DeepSeek'
@@ -249,7 +248,7 @@ mcpServers:
     args:
       - '/app/mcp-servers/image/index.js'
     env:
-      DASHSCOPE_API_KEY: '${QWEN_API_KEY}'
+      DASHSCOPE_API_KEY: '${QWENCLOUD_KEY}'
       DASHSCOPE_BASE_URL: 'https://token-plan.ap-southeast-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation'
       # DASHSCOPE_BASE_URL: 'https://dashscope-intl.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation'
       IMAGES_PATH: '/app/generated_files/'
@@ -271,7 +270,7 @@ mcpServers:
     args:
       - '/app/mcp-servers/video/index.js'
     env:
-      DASHSCOPE_API_KEY: '${QWEN_API_KEY}'
+      DASHSCOPE_API_KEY: '${QWENCLOUD_KEY}'
       DASHSCOPE_API_HOST: 'https://token-plan.ap-southeast-1.maas.aliyuncs.com'
       VIDEO_API_VARIANT: 'tokenplan'
       # DASHSCOPE_API_HOST: 'https://dashscope-intl.aliyuncs.com'
