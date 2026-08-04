@@ -320,3 +320,9 @@ actions:
     - 'ollama:11434'
     - 'localhost:11434'
     - '127.0.0.1:11434'
+
+# File size limits (in MB) — override the hardcoded provider defaults (e.g. 10MB for OpenAI)
+# fileConfig:
+#   endpoints:
+#     default:
+#       fileSizeLimit: 50   # applies to all endpoints
