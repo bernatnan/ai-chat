@@ -305,7 +305,7 @@ mcpServers:
       UPLOADS_ROOT: '/app/uploads'
       IMAGES_ROOT: '/app/client/public/images'
       GENERATED_ROOT: '/app/generated_files'
-    timeout: 120000
+    timeout: 300000
 
 actions:
   allowedDomains:
