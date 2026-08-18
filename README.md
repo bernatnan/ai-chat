@@ -452,17 +452,13 @@ cd ai-chat
 # 3. Init submodules
 git submodule update --init --recursive
 
-# 4. Restore non-versioned files (optional, if migrating from existing server)
-# See Backup section below for restic setup
-# scripts/restore.sh
-
-# 5. If restoring from a MongoDB 4.4 backup, migrate before starting:
+# 4. If restoring from a MongoDB 4.4 backup, migrate before starting:
 # scripts/migrate-mongodb.sh
 #   or specify custom versions:
 #   scripts/migrate-mongodb.sh 4.4 8.0.20
 # Then follow the on-screen instructions (edit docker-compose.yml, mongorestore)
 
-# 6. Start all services
+# 5. Start all services
 # Nota: si el contenidor api no pot escriure a logs/ (EACCES), executa:
 #   sudo chown -R 1000:1000 /srv/ai-chat/logs/
 docker compose up -d
@@ -480,104 +476,7 @@ curl http://localhost:8180/v1/models  # Should show whisper-1 and tts-1
 # 8. Download Whisper STT model (if empty)
 docker exec localai sh -c 'curl -L -o /build/models/ggml-tiny.bin \
   https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin'
-
-# 9. Set up backups
-# See Backup section below
 ```
-
-### Restoring from backup (migrating or recovery)
-
-```bash
-# 1. Clone and init submodules
-git clone https://github.com/bernatnan/ai-chat.git /srv/ai-chat
-cd /srv/ai-chat
-git submodule update --init --recursive
-
-# 2. Install restic and set up environment
-# See Backup section below for setup
-
-# 3. Restore non-versioned files (data-node, uploads, images, .env, librechat.yaml)
-scripts/restore.sh            # from remote (default)
-# scripts/restore.sh local    # from local repo instead
-
-# 4. If restoring from a MongoDB 4.4 backup, migrate before starting:
-# scripts/migrate-mongodb.sh
-#   or specify custom versions:
-#   scripts/migrate-mongodb.sh 4.4 8.0.20
-# Then follow the on-screen instructions
-
-# 5. Start all services
-docker compose up -d
-
-# 6. Download Whisper STT model (if empty)
-docker exec localai sh -c 'curl -L -o /build/models/ggml-tiny.bin \
-  https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin'
-```
-
-A maximum of 4 steps: `git clone`, `scripts/restore.sh`, `scripts/migrate-mongodb.sh`, `docker compose up -d`.
-
-## Backup
-
-Daily encrypted backups using [Restic](https://restic.net/). Supports two independent targets — **local** (LAN Debian) and/or **remote** (S3-compatible, e.g. iDrive E2). Each can be enabled/disabled via env vars.
-
-### What's backed up
-
-| Path | Contents | Why |
-|---|---|---|
-| `data-node/` | MongoDB database | Conversations, users, config overrides |
-| `uploads/` | User uploaded files | Images, documents, audio |
-| `images/` | Generated images | MCP-generated content |
-| `.env` | Environment secrets | API keys, tokens |
-| `librechat.yaml` | Local LibreChat config | Gitignored, not in repo |
-
-No versionats — només els fitxers que **no** estan a Git. La resta es recupera amb `git clone`.
-
-### Setup
-
-```bash
-# 1. Install restic
-sudo apt install restic
-
-# 2. Create password file
-echo 'your-secure-password' | sudo tee /root/.restic/restic-password.txt
-sudo chmod 600 /root/.restic/restic-password.txt
-# Or use passage:
-# passage insert restic/librechat
-
-# 3. Copy environment template and edit
-sudo mkdir -p /root/.restic
-sudo cp scripts/restic-env.sh.template /root/.restic/restic-env.sh
-sudo vim /root/.restic/restic-env.sh
-
-# 4. Initialize repositories
-# Note: these paths must match RESTIC_REPO_LOCAL and RESTIC_REPO_REMOTE in restic-env.sh
-restic -r /mnt/backup/librechat init
-restic -r s3:us-east-1.linodeobjects.com/librechat-backup init
-
-# 5. Copy cron file
-sudo cp scripts/restic-cron /etc/cron.d/restic-backup
-
-# 6. Test manually
-sudo /srv/ai-chat/scripts/backup.sh
-```
-
-### Toggling targets
-
-Edit `/root/.restic/restic-env.sh`:
-
-```bash
-export BACKUP_LOCAL=true   # set to false to skip local
-export BACKUP_REMOTE=true  # set to false to skip remote
-```
-
-### Files
-
-See:
-- [`scripts/backup.sh`](scripts/backup.sh) — backup only non-versioned files
-- [`scripts/restore.sh`](scripts/restore.sh) — restore on a new server (3-step deploy)
-- [`scripts/restic-env.sh.template`](scripts/restic-env.sh.template) — environment config template
-- [`scripts/restic-exclude.txt`](scripts/restic-exclude.txt) — exclusion patterns (legacy)
-- [`scripts/migrate-mongodb.sh`](scripts/migrate-mongodb.sh) — migrate MongoDB 4.4 data to 8.0
 
 ## Updates
 
