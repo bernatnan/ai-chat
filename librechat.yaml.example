@@ -106,6 +106,14 @@ webSearch:
   jinaApiKey: '${JINA_API_KEY}'
 
 endpoints:
+  # Global title generation — applies to all endpoints (agents + direct chats).
+  # 'structured' detects the conversation language and titles in it.
+  # titleEndpoint routes generation to a cheap fast model regardless of the chat model.
+  all:
+    titleMethod: 'structured'
+    titleEndpoint: 'QwenCloud'
+    titleModel: 'qwen3.6-flash'
+
   agents:
     recursionLimit: 50
     maxRecursionLimit: 50
@@ -124,8 +132,6 @@ endpoints:
           - 'claude-3-sonnet-20240229'
           - 'claude-3-haiku-20240307'
         fetch: false
-      titleConvo: true
-      titleModel: 'claude-3-haiku-20240307'
       modelDisplayLabel: 'Anthropic'
 
     # OpenAI
@@ -142,8 +148,6 @@ endpoints:
           - 'o1-preview'
           - 'o1-mini'
         fetch: false
-      titleConvo: true
-      titleModel: 'gpt-3.5-turbo'
       modelDisplayLabel: 'OpenAI'
 
     # QwenCloud Token Plan / DashScope (Alibaba Cloud) - All models
@@ -166,8 +170,6 @@ endpoints:
           - 'glm-5.2'
           - 'MiniMax-M2.5'
         fetch: false
-      titleConvo: true
-      titleModel: 'qwen3.6-flash'
       modelDisplayLabel: 'QwenCloud'
       dropParams: ['stop', 'user', 'frequency_penalty', 'presence_penalty']
 
@@ -179,8 +181,6 @@ endpoints:
         default:
           - 'qwen3.7-flash'
         fetch: false
-      titleConvo: true
-      titleModel: 'qwen3-7-flash'
       modelDisplayLabel: 'Qwen'
       dropParams: ['stop', 'user', 'frequency_penalty', 'presence_penalty']
 
@@ -193,8 +193,6 @@ endpoints:
           - 'deepseek-chat'
           - 'deepseek-reasoner'
         fetch: false
-      titleConvo: true
-      titleModel: 'deepseek-chat'
       modelDisplayLabel: 'DeepSeek'
       dropParams: ['stop', 'user', 'frequency_penalty', 'presence_penalty']
 
@@ -212,8 +210,6 @@ endpoints:
           - 'glm-4v'
           - 'cogview-4'
         fetch: false
-      titleConvo: true
-      titleModel: 'glm-4-flash'
       modelDisplayLabel: 'Zhipu AI'
       dropParams: ['stop', 'user', 'frequency_penalty', 'presence_penalty']
 
@@ -229,8 +225,6 @@ endpoints:
           - 'deepseek-r1'
           - 'codellama'
         fetch: true
-      titleConvo: true
-      titleModel: 'current_model'
       modelDisplayLabel: 'Ollama (Local)'
 
     # OpenRouter (multi-provider gateway)
@@ -242,8 +236,6 @@ endpoints:
           - 'meta-llama/llama-3.1-70b-instruct'
           - 'deepseek/deepseek-chat'
         fetch: true
-      titleConvo: true
-      titleModel: 'meta-llama/llama-3.1-70b-instruct'
       modelDisplayLabel: 'OpenRouter'
       dropParams: ['stop']
 
