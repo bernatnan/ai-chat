@@ -59,8 +59,11 @@ registration:
   #   - "yourdomain.com"
 
 # Speech (TTS/STT)
+# Note: allowedAddresses is required since the SSRF guard blocks private Docker IPs by default.
 speech:
   tts:
+    allowedAddresses:
+      - 'localai:8080'
     localai:
       url: 'http://localai:8080/v1/audio/speech'
       apiKey: ''
@@ -78,6 +81,8 @@ speech:
         - 'it_IT-paola-medium'
         - 'it_IT-riccardo-medium'
   stt:
+    allowedAddresses:
+      - 'localai:8080'
     openai:
       url: 'http://localai:8080/v1/audio/transcriptions'
       apiKey: ''
@@ -89,7 +94,10 @@ speech:
     preferredVoice: 'ca_ES-upc_ona-medium'
 
 # Web Search Configuration
+# Note: allowedAddresses is required since the SSRF guard blocks private Docker IPs by default.
 webSearch:
+  allowedAddresses:
+    - 'searxng:8080'
   searchProvider: searxng
   searxngInstanceUrl: '${SEARXNG_INSTANCE_URL}'
   scraperProvider: tavily
