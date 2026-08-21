@@ -253,9 +253,13 @@ mcpServers:
     args:
       - '/app/mcp-servers/image/index.js'
     env:
+      # generate_image — Subscription (token plan)
       DASHSCOPE_API_KEY: '${QWENCLOUD_KEY}'
       DASHSCOPE_BASE_URL: 'https://token-plan.ap-southeast-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation'
-      # DASHSCOPE_BASE_URL: 'https://dashscope-intl.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation'
+      # edit_image — Pay-As-You-Go (qwen-image-edit is not in the token plan)
+      # Falls back to the generate credentials when omitted
+      DASHSCOPE_EDIT_API_KEY: '${QWEN_API_KEY}'
+      DASHSCOPE_EDIT_BASE_URL: 'https://dashscope-intl.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation'
       IMAGES_PATH: '/app/generated_files/'
     timeout: 120000
 
