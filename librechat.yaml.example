@@ -87,12 +87,14 @@ webSearch:
 
 endpoints:
   # Global title generation — applies to all endpoints (agents + direct chats).
-  # 'structured' detects the conversation language and titles in it.
+  # 'completion' works with any model (no function calling required); titlePrompt
+  # instructs the model to title in the conversation's own language.
   # titleEndpoint routes generation to a cheap fast model regardless of the chat model.
   all:
-    titleMethod: 'structured'
+    titleMethod: 'completion'
     titleEndpoint: 'QwenCloud'
     titleModel: 'qwen3.6-flash'
+    titlePrompt: 'Write a concise title for this conversation in the same language as the conversation. Title in 5 Words or Less. No Punctuation or Quotation.'
 
   agents:
     recursionLimit: 50
