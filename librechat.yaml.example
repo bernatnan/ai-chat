@@ -94,7 +94,11 @@ endpoints:
     titleMethod: 'completion'
     titleEndpoint: 'QwenCloud'
     titleModel: 'qwen3.6-flash'
-    titlePrompt: 'Write a concise title for this conversation in the same language as the conversation. Title in 5 Words or Less. No Punctuation or Quotation.'
+    titlePrompt: |
+      Write a concise title for this conversation in the same language as the conversation. Title in 5 Words or Less. No Punctuation or Quotation.
+
+      Conversation:
+      {convo}
 
   agents:
     recursionLimit: 50
