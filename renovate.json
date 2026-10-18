@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "automerge": false,
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard"
+  ],
+  "git-submodules": {
+    "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true
+  }
+}
