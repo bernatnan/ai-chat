@@ -44,7 +44,7 @@ services:
 
   meilisearch:
     container_name: chat-meilisearch
-    image: getmeili/meilisearch:v1.35.1
+    image: getmeili/meilisearch:v1.55.0
     restart: always
     environment:
       - MEILI_HOST=http://meilisearch:7700
