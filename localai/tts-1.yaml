@@ -1,0 +1,4 @@
+name: tts-1
+backend: piper
+parameters:
+  model: ca_ES-upc_ona-medium.onnx

@@ -133,7 +133,10 @@ services:
 
   localai:
     container_name: localai
-    image: localai/localai:v4.12.1
+    build:
+      context: ./localai-build
+      dockerfile: Dockerfile
+    image: librechat-localai:local
     restart: always
     ports:
       - "127.0.0.1:${LOCALAI_PORT:-8180}:8080"
@@ -141,7 +144,8 @@ services:
       - THREADS=${LOCALAI_THREADS:-4}
     volumes:
       - localai_models:/models
-      - ./localai/config.yaml:/models/config.yaml:ro
+      - ./localai/whisper-1.yaml:/models/whisper-1.yaml:ro
+      - ./localai/tts-1.yaml:/models/tts-1.yaml:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
