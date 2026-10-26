@@ -133,15 +133,15 @@ services:
 
   localai:
     container_name: localai
-    image: localai/localai:master-ffmpeg-core
+    image: localai/localai:v4.12.1
     restart: always
     ports:
-      - "${LOCALAI_PORT:-8180}:8080"
+      - "127.0.0.1:${LOCALAI_PORT:-8180}:8080"
     environment:
       - THREADS=${LOCALAI_THREADS:-4}
     volumes:
-      - localai_models:/build/models
-      - ./localai/config.yaml:/build/models/config.yaml:ro
+      - localai_models:/models
+      - ./localai/config.yaml:/models/config.yaml:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
