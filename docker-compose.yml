@@ -55,14 +55,14 @@ services:
 
   vectordb:
     container_name: vectordb
-    image: pgvector/pgvector:0.8.0-pg15-trixie
+    image: pgvector/pgvector:0.8.7-pg18-trixie
     environment:
       POSTGRES_DB: mydatabase
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
     restart: always
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata18:/var/lib/postgresql
 
   rag_api:
     container_name: rag_api
@@ -141,6 +141,7 @@ services:
 
 volumes:
   pgdata:
+  pgdata18:
   ollama_data:
   searxng_data:
   valkey_data:
