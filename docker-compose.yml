@@ -66,7 +66,10 @@ services:
 
   rag_api:
     container_name: rag_api
-    image: registry.librechat.ai/danny-avila/librechat-rag-api-dev-lite:latest
+    build:
+      context: ./rag-api-build
+      dockerfile: Dockerfile
+    image: librechat-rag-api:local
     environment:
       - DB_HOST=vectordb
       - RAG_PORT=${RAG_PORT:-8000}
