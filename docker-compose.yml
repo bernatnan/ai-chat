@@ -111,7 +111,10 @@ services:
 
   admin-panel:
     container_name: librechat-admin-panel
-    image: ghcr.io/clickhouse/librechat-admin-panel:latest
+    build:
+      context: ../librechat-admin-panel-src
+      dockerfile: Dockerfile
+    image: librechat-admin-panel:local
     restart: always
     ports:
       - "127.0.0.1:${ADMIN_PANEL_PORT:-3000}:3000"
