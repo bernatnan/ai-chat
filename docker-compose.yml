@@ -5,7 +5,7 @@ services:
       context: ./librechat
       dockerfile: Dockerfile.custom
     ports:
-      - "${PORT:-3080}:${PORT:-3080}"
+      - "${LIBRECHAT_BIND_ADDRESS:-127.0.0.1}:${PORT:-3080}:${PORT:-3080}"
     depends_on:
       - mongodb
       - rag_api
@@ -83,8 +83,6 @@ services:
     container_name: ollama
     image: ollama/ollama:latest
     restart: always
-    ports:
-      - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
 
@@ -92,8 +90,6 @@ services:
     container_name: searxng
     image: docker.io/searxng/searxng:latest
     restart: always
-    ports:
-      - "8080:8080"
     environment:
       - SEARXNG_SECRET=${SEARXNG_SECRET}
       - SEARXNG_LIMITER=false
